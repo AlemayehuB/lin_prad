@@ -4,15 +4,17 @@ created by Carlo Graziani, University of Chicago.
 Starting files
 --------------
 Input File: Blob.out
-Note:
-  1. Specmesh.py makes specmesh which is the magnetic field and then raytrace.py
+  Note
+  ----
+    1. Specmesh.py makes specmesh which is the magnetic field and then raytrace.py
      traces all the protons returning a blob.out.
-  2. Make an input file from an proton radiography experiment
+    2. Make an input file from an proton radiography experiment
 
 Progression
 -----------
 User can either input blob.out like file into either:
   1. reconstruct.py
+
         Note
         ----
         Takes the input data which contains the initial vector and the final location
@@ -29,6 +31,7 @@ User can either input blob.out like file into either:
         python reconstruct.py blob.out(experimental data) blobfield.out(Arbitraty name)
 
   2. image.py
+
         Note
         ----
         Takes the input data creating various plots using the current integral and
@@ -51,6 +54,7 @@ User can either input blob.out like file into either:
 Result
 ------
   Bplot2.py
+
     Note
     ----
     Purpose of this script is to compare plots with the True and Reconstructed
