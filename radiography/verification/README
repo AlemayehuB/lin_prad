@@ -1,9 +1,0 @@
-Two-blob verification test for field reconstruction.
-
-The file 'blob.out.gz' uncompresses to a 2.5GB file containing 10 million
-simulated protons, which have traveled through an interaction region containing
-two Gaussian blobs.
-
-Running reconstruct.py on this file created the reconstruction file, called
-'blobfield.out'. Running the plotting utility 'Bplot2.py' created the files 
-'B_Reconstructed.png' and 'B_True.png'.
