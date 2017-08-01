@@ -9,7 +9,8 @@ from re import match
 import math
 
 import rad_ut as ru
-from .constants import M_PROTON_G, ESU, C, V_PER_E
+from constants import M_PROTON_G, ESU, C, V_PER_E
+
 import numpy as np
 
 # margin
@@ -21,57 +22,56 @@ TOL_ITER = 1.0E-4
 # Maximum number of Gauss-Seidel iterations
 MAX_ITER = 4000
 
-def pixel_count()
-
 
 def b_field(rs, ri, Tkin):
-''' Calculates the Uniform Magnetic field.
+    '''
+    Calculates the Uniform Magnetic field.
     Parameters
     ----------
-    rs : floar
+    rs (float):
         Lenght from implosion to screen
-    ri : float
+    ri (float):
         Length from implosion to interaction region
-    Tkin : float
-        Proton Kinetic Energies
+    Tkin (float):
+         Kinetic energy
     Returns
     -------
-    int
-        Calculates the B, uniform field strength
-'''
-    v = math.sqrt(2 * (Tkin*VperE) / m) # Velocity of Proton
+    Bconst (float):Calculates the B, uniform magnetic field strength
+    '''
+    v = math.sqrt(2 * (Tkin*V_PER_E) / m) # Velocity of Proton
 
-    Bconst = m * c * v / (e * (rs-ri)) #Uniform field Strength
+    Bconst = M_PROTON_G * C * v / (ESU * (rs-ri)) #Uniform field Strength
 
     return Bconst
 
 def steady_state(flux, rs, ri, rap, tot_prot, num_bins):
-''' The goal is the obtain the steady-state diffusion Equation
+    '''
+    The goal is the obtain the steady-state diffusion Equation
     Parameters
     ----------
-    flux : 2D array
+    flux (2D array):
         Number of protons per bin
-    rs : float
+    rs (float) :
         Lenght from implosion to screen
-    ri : float
+    ri (float):
         Length from implosion to interaction region
-    rap : float
+    rap (float):
         Aperature of the cone that is collimated to screen
-    tot_prot: float
+    tot_prot (float):
         Number of protons from the original capsule impolsion
-    num_bins: 2D array
+    num_bins (int):
         Bin per dimenison
     Returns
     -------
-    returns the source term obtained from multiplying the fluence contrast,Λ, and exp(Λ)
-    along with the actual fluence contrast
-'''
+    Lam (2D array): fluence contrast
+    Src(2D array): Source term from multiplying the fluence contrast and exp(fluence contrast)
+    '''
     # radius of undeflected image of aperture at screen
     radius = rap * rs / ri
     # Distrubtion of the stream of protons
     avg_fluence = tot_prot/(math.pi * radius**2)
 
-    ru.dmax = marg * radius / math.sqrt(2.0)  # variable in rad_ut
+    ru.dmax = MARG * radius / math.sqrt(2.0)  # variable in rad_ut
     ru.delta = 2.0 * ru.dmax / num_bins  # variable in rad_ut
     # Obtaining the fluence contrast
     Lam = np.zeros((num_bins, num_bins))
@@ -83,25 +83,120 @@ def steady_state(flux, rs, ri, rap, tot_prot, num_bins):
     Src = np.multiply(Lam,ExpLam) # RHS of the Steady-State Diffusion Equation
     return (Src,Lam)
 
-def D(i, j, x):
-''' Supplemental function used during Gauss-Seidel Iteration
-    Parameters
-'''
-    d = -2.0 * x[i,j] - 0.5 * ( ru.bc_enforce_N(x, i+1,j)
-          + ru.bc_enforce_N(x, i-1,j)
-          + ru.bc_enforce_N(x, i,j+1)
-          + ru.bc_enforce_N(x, i,j-1) )
+def D(i, j, y):
+    '''
+    Supplemental function used during Gauss-Seidel Iteration
+    '''
+    d = -2.0 * y[i,j] - 0.5 * ( ru.bc_enforce_N(y, i+1,j)
+          + ru.bc_enforce_N(y, i-1,j)
+          + ru.bc_enforce_N(y, i,j+1)
+          + ru.bc_enforce_N(y, i,j-1) )
     return d
 
-def O(i,j, x):
-''' Supplemental function used during Gauss-Seidel Iteration
-'''
-    a = 0.5 * ( ru.bc_enforce_D(x, i+1,j) * (ru.bc_enforce_N(ExpLam, i+1,j) + ExpLam[i,j])
-        + ru.bc_enforce_D(x, i-1,j) * (ru.bc_enforce_N(ExpLam, i-1,j) + ExpLam[i,j])
-        + ru.bc_enforce_D(x, i,j+1) * (ru.bc_enforce_N(ExpLam, i,j+1) + ExpLam[i,j])
-        + ru.bc_enforce_D(x, i,j-1) * (ru.bc_enforce_N(ExpLam, i,j-1) + ExpLam[i,j]))
+def O(i, j, x, y):
+    '''
+    Supplemental function used during Gauss-Seidel Iteration
+    '''
+    a = 0.5 * ( ru.bc_enforce_D(x, i+1,j) * (ru.bc_enforce_N(y, i+1,j) + y[i,j])
+        + ru.bc_enforce_D(x, i-1,j) * (ru.bc_enforce_N(y, i-1,j) + y[i,j])
+        + ru.bc_enforce_D(x, i,j+1) * (ru.bc_enforce_N(y, i,j+1) + y[i,j])
+        + ru.bc_enforce_D(x, i,j-1) * (ru.bc_enforce_N(y, i,j-1) + y[i,j]))
     return a
 
-def flux_alog(flux,):
-'''
-'''
+def B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin):
+    '''
+    Produces a reconstructed magnetic field
+    Parameters
+    ----------
+    flux (2D array):
+        Number of protons per bin
+    rs (float) :
+        Lenght from implosion to screen
+    ri (float):
+        Length from implosion to interaction region
+    rap (float):
+        Aperature of the cone that is collimated to screen
+    tot_prot (float):
+        Number of protons from the original capsule impolsion
+    num_bins (int):
+        Bin per dimenison
+    Tkin (float):
+        Kinetic Energy
+    Returns
+    -------
+    B_R (2D array of (x,y)):
+        Reconstructed Magnetic Field
+    '''
+    # RHS of the Steady-State Diffusion Equation
+    Src = steady_state(flux, rs, ri, rap, tot_prot, num_bins)[0]
+    # Fluence Contrast
+    Lam = steady_state(flux, rs, ri, rap, tot_prot, num_bins)[1]
+    # Initial guess by FFT Poisson solve
+    phi = ru.solve_poisson(Lam)
+    # Iterate to solution
+    GS = ru.Gauss_Seidel(phi, np.exp(Lam), D, O, Src, talk=20, tol=TOL_ITER, maxiter=MAX_ITER)
+    phi *= ru.delta**2
+    # Uniform B Field Strength
+    Bconst = b_field(rs, ri, Tkin)
+    # Reconstructed perpendicular B Fields
+    B_R = np.zeros((num_bins, num_bins,2))
+    # Lateral motion of proton
+    deltaX = np.zeros((num_bins, num_bins,2))
+
+    for i in range(num_bins):
+        for j in range(num_bins):
+            #Reconstructed Data
+            deltaX[i,j] = -ru.gradient(phi, (i,j))
+            B_R[i,j,0] = Bconst * deltaX[i,j,1]
+            B_R[i,j,1] = -Bconst * deltaX[i,j,0]
+
+    return B_R
+
+def flux_image(filename, num_bins):
+    #Data file descriptor
+    data = open(filename, 'r')
+    plimit =- 1
+    line = data.readline()
+    while not match('# Columns:', line): #Sets the variables
+
+            if match('# Tkin:', line):
+                Tkin = float(line.split()[2]) #Kinetic energy
+
+            elif match('# rs:', line):
+                rs = float(line.split()[2]) # Length from implosion to screen
+
+            elif match('# ri:', line):
+                ri = float(line.split()[2]) # Length from implosion to interaction region
+
+            elif match('# raperture:', line):
+                rap = float(line.split()[2]) # aperture
+
+            line = data.readline()
+    # The loop reads each line of the input until the data is reached.
+    while match('#', line): line = data.readline()
+    # Pixel Counts
+    count = np.zeros((num_bins, num_bins))
+    rec_prot =  0
+    radius = rap * rs / ri  # radius of undeflected image of aperture at screen
+    ru.dmax = MARG * radius / math.sqrt(2.0)  # variable in rad_ut
+    ru.delta = 2.0 * ru.dmax / num_bins  # variable in rad_ut
+    while line:
+        rec_prot += 1
+        line = line.split()
+        x_loc = float(line[3]) # Final X location at screen (cm)
+        y_loc = float(line[4]) # Final Y location at screen (cm)
+        i,j = ru.vec2idx((x_loc,y_loc))
+
+        #The if-statement places values in the lists
+        if (x_loc + ru.dmax)/ru.delta >= 0 and i < num_bins and (y_loc + ru.dmax)/ru.delta >= 0 and j < num_bins:
+            count[i,j] += 1
+
+        if rec_prot == plimit: break
+        line = data.readline()
+    return count
+
+x = flux_image(argv[1],128)
+print x
+
+BR = B_Recon( x, 1.00000E+02, 1.00000E+01, 2.00000E-01, 10000000, 128, 14.7)
+print BR

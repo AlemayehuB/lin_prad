@@ -48,25 +48,25 @@ def solve_poisson(src):
     buf = ifftn(buf)
     return buf.real
 
-def GS_Iteration(x, D, O, a, b):
+def GS_Iteration(x, y, D, O, b):
     for i in range(x.shape[0]):
         for j in range(x.shape[1]):
-            x[i,j] = (b[i,j] - O(i,j, x)) / D(i,j,x)
+            x[i,j] = (b[i,j] - O(i,j,x,y)) / D(i,j,y)
 
-def residual(x, D, O, a, b):
+def residual(x, y, D, O, b):
     r = np.zeros(x.shape)
     for i in range(x.shape[0]):
         for j in range(x.shape[1]):
-            r[i,j] = O(i,j,x) + D(i,j,a)*x[i,j] - b[i,j]
+            r[i,j] = O(i,j,x,y) + D(i,j,y)*x[i,j] - b[i,j]
     return r
 
-def Gauss_Seidel(x, D, O, a, b, maxiter=2000, tol=1.0E-02, talk=0):
+def Gauss_Seidel(x, y, D, O, b, maxiter=2000, tol=1.0E-02, talk=0):
 
     L2b = fnorm(b)
     for itn in range(maxiter):
         xprev = x.copy()
-        GS_Iteration(x, D, O, a, b)
-        r = residual(x, D, O, a, b)
+        GS_Iteration(x, y, D, O, b)
+        r = residual(x, y, D, O, b)
         L2r = fnorm(r) / L2b
         if talk > 0 and itn % talk == 0:
             print "Iteration # %d, L2 of residual = %10.3E" % (itn, L2r)
