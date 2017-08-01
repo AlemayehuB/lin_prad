@@ -38,7 +38,7 @@ def b_field(rs, ri, Tkin):
     -------
     Bconst (float):Calculates the B, uniform magnetic field strength
     '''
-    v = math.sqrt(2 * (Tkin*V_PER_E) / m) # Velocity of Proton
+    v = math.sqrt(2 * (Tkin*V_PER_E) / M_PROTON_G) # Velocity of Proton
 
     Bconst = M_PROTON_G * C * v / (ESU * (rs-ri)) #Uniform field Strength
 
@@ -127,6 +127,9 @@ def B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin):
     B_R (2D array of (x,y)):
         Reconstructed Magnetic Field
     '''
+    print ("Min Pixel Count: %12.5E\nMax Pixel Count: %12.5E\n"
+           "Mean Pixel Count: %12.5E"
+           %(flux.min(),flux.max(),flux.mean()))
     # RHS of the Steady-State Diffusion Equation
     Src = steady_state(flux, rs, ri, rap, tot_prot, num_bins)[0]
     # Fluence Contrast
@@ -194,9 +197,3 @@ def flux_image(filename, num_bins):
         if rec_prot == plimit: break
         line = data.readline()
     return count
-
-x = flux_image(argv[1],128)
-print x
-
-BR = B_Recon( x, 1.00000E+02, 1.00000E+01, 2.00000E-01, 10000000, 128, 14.7)
-print BR

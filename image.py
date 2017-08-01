@@ -204,7 +204,7 @@ fig.set_figheight(12.0)
 ''' The plots 'fluence contrast', 'current projection function',
 'Fluence Contrast Difference/Noise','Counts/Bin','Predicted Counts/Bin',
 and 'Counts Difference/Noise' '''
-
+'''
 # Fluence Contrast
 ax = fig.add_subplot(2,3,1)
 p = ax.pcolormesh(x,y, Fluct, cmap=cm.afmhot, vmin=min(Fluct.min(), cur_int.min()),
@@ -226,16 +226,17 @@ ax = fig.add_subplot(2,3,3)
 p = ax.pcolormesh(x,y, Diff, cmap=cm.RdYlGn, vmax=vm, vmin=-vm)
 plt.colorbar(p)
 ax.set_title("Fluence Contrast Difference/Noise")
-
+'''
 # Counts/Bin
-ax = fig.add_subplot(2,3,4)
-p = ax.pcolormesh(x,y, count, cmap=cm.afmhot, vmin=min(eta.min(), count.min()),
-                  vmax=max(eta.max(), count.max()))
+ax = fig.add_subplot(1,1,1)
+p = ax.pcolormesh(x,y, count, cmap=cm.afmhot, vmin=count.min(),
+                  vmax= count.max())
 ax.set_xlabel("X (cm)")
 ax.set_ylabel("Y (cm)")
 plt.colorbar(p)
 ax.set_title("Counts/Bin")
-
+fig.savefig("radiography.png", format='png')
+'''
 # Predicted Counts/Bin
 ax = fig.add_subplot(2,3,5)
 p = ax.pcolormesh(x,y, eta, cmap=cm.afmhot, vmin=min(eta.min(),
@@ -281,3 +282,4 @@ ax.set_title("Angular Deviation")
 plt.colorbar(p)
 
 fig.savefig("radiography_angdev.png", format='png')
+'''
