@@ -1,32 +1,36 @@
 import math
 import sys
 
+import rad_ut as ru
 import fun_reconstruct as fr
+from constants import M_PROTON_G, ESU, C, V_PER_E, MARG
+
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
-# margin
-MARG = 0.98
+
 
 # Floor counts per bin
 Cmin = 10.0
 
-def list(num_bins, rap, rs, ri):
-    radius = rap * rs / ri  # radius of the undeflected image on the screen
-    dmax = MARG * radius / math.sqrt(2.0)
-    delta = 2.0 * dmax / num_bins
-    x = np.zeros((num_bins+1, num_bins+1))
-    y = np.zeros((num_bins+1, num_bins+1))
-    for i in range(num_bins+1):
-        xx = -dmax + i*delta
-        for j in range(num_bins+1):
-            yy = -dmax + j*delta
-            x[i,j] = xx
-            y[i,j] = yy
-    return (x,y)
-
 def fluct(flux, num_bins,rap, rs, ri, tot_prot):
+    '''
+    Calculates the fluence contrast per bin and is put into 2D array
+
+    Parameters
+    ----------
+    flux (2D array): Number of protons per bin
+    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    rap (float): Aperature of the cone that is collimated to screen
+    rs (float): Lenght from implosion to screen
+    ri (float): Length from implosion to interaction region
+    tot_prot (int): number of protons shot at the screen
+
+    Returns
+    -------
+    Fluct (2D array): fluecne contrast per bin
+    '''
     # Fluence Contrast
     Fluct = np.zeros((num_bins,num_bins))
     radius = rap * rs / ri  # radius of the undeflected image on the screen
@@ -40,25 +44,69 @@ def fluct(flux, num_bins,rap, rs, ri, tot_prot):
     return Fluct
 
 def fluct_plot(flux, num_bins,rap, rs, ri, tot_prot):
+    '''
+    Genereates the a plot that shows the number of
+    protons per bin
+
+    Parameters
+    ----------
+    flux (2D array): Number of protons per bin
+    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    rap (float): Aperature of the cone that is collimated to screen
+    rs (float): Lenght from implosion to screen
+    ri (float): Length from implosion to interaction region
+    tot_prot (int): number of protons shot at the screen
+
+    Returns
+    -------
+    Fluence_Contrast.png
+    '''
+    print "Constructing Fluence Contrast Plot"
+    font = {'family': 'serif',
+        'color':  'black',
+        'weight': 'normal',
+        'size': 32,
+        }
     Fluct = fluct(flux,num_bins,rap, rs, ri, tot_prot)
-    x = list(num_bins, rap, rs, ri)[0]
-    y = list(num_bins, rap, rs, ri)[1]
+    x = ru.position(num_bins, rap, rs, ri)[0]
+    y = ru.position(num_bins, rap, rs, ri)[1]
     fig = plt.figure()
     fig.set_figwidth(26)
     fig.set_figheight(12.0)
     ax = fig.add_subplot(1,1,1)
     p = ax.pcolormesh(x,y, Fluct, cmap=cm.afmhot,
                         vmin=Fluct.min(),vmax=Fluct.max())
-    ax.set_ylabel("Y (cm)")
-    ax.set_xlabel("X (cm)")
+    ax.set_ylabel("Y (cm)", fontdict=font)
+    ax.set_xlabel("X (cm)", fontdict=font)
     plt.colorbar(p)
-    ax.set_title("Fluence Contrast")
-    print "Making Fluence Contrast Plot"
+    ax.set_title("Fluence Contrast", fontdict=font)
     fig.savefig("Fluence_Contrast.png", format='png')
 
 def flux_plot(flux,num_bins,rap, rs, ri):
-    x = list(num_bins, rap, rs, ri)[0]
-    y = list(num_bins, rap, rs, ri)[1]
+    '''
+    Genereates the a plot that shows the number of
+    protons per bin
+
+    Parameters
+    ----------
+    flux (2D array): Number of protons per bin
+    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    rap (float): Aperature of the cone that is collimated to screen
+    rs (float) : Lenght from implosion to screen
+    ri (float): Length from implosion to interaction region
+
+    Returns
+    -------
+    Flux.png
+    '''
+    print "Constructing Counts/Bin Plot"
+    font = {'family': 'serif',
+        'color':  'black',
+        'weight': 'normal',
+        'size': 32,
+        }
+    x = ru.position(num_bins, rap, rs, ri)[0]
+    y = ru.position(num_bins, rap, rs, ri)[1]
     fig = plt.figure()
     fig.set_figwidth(26)
     fig.set_figheight(12.0)
@@ -66,12 +114,12 @@ def flux_plot(flux,num_bins,rap, rs, ri):
     ax = fig.add_subplot(1,1,1)
     p = ax.pcolormesh(x,y, flux, cmap=cm.afmhot, vmin=flux.min(),
                       vmax= flux.max())
-    ax.set_xlabel("X (cm)")
-    ax.set_ylabel("Y (cm)")
+    ax.set_xlabel("X (cm)",fontdict=font)
+    ax.set_ylabel("Y (cm)",fontdict=font)
     plt.colorbar(p)
-    ax.set_title("Counts/Bin")
-    fig.savefig("Counts/Bin.png", format='png')
-    #fig.savefig("Counts/Bin.png", format='png')
+    ax.set_title("Counts/Bin",fontdict=font)
+    fig.savefig("Flux.png", format='png')
 
 x = fr.flux_image(sys.argv[1],128)
-fluct_plot(x,128,  2.00000E-01,1.00000E+02,1.00000E+01, 10000000)
+#fluct_plot(x,128,  2.00000E-01,1.00000E+02,1.00000E+01, 10000000)
+flux_plot(x,128,  2.00000E-01,1.00000E+02,1.00000E+01)

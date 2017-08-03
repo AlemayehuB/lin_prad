@@ -4,17 +4,14 @@ Inferring Morphology and Strength of Magnetic Fields From Proton Radiographs,
 This script will reconstruct magnetic fields given the data
 from a Proton Radiography experiment.
 '''
-from sys import argv
-from re import match
+import sys
 import math
+from re import match
 
 import rad_ut as ru
-from constants import M_PROTON_G, ESU, C, V_PER_E
+from constants import M_PROTON_G, ESU, C, V_PER_E, MARG
 
 import numpy as np
-
-# margin
-MARG = 0.98
 
 # Gauss-Seidel iteration tolerance
 TOL_ITER = 1.0E-4
@@ -26,14 +23,13 @@ MAX_ITER = 4000
 def b_field(rs, ri, Tkin):
     '''
     Calculates the Uniform Magnetic field.
+
     Parameters
     ----------
-    rs (float):
-        Lenght from implosion to screen
-    ri (float):
-        Length from implosion to interaction region
-    Tkin (float):
-         Kinetic energy
+    rs (float): Lenght from implosion to screen
+    ri (float): Length from implosion to interaction region
+    Tkin (float): Kinetic energy
+
     Returns
     -------
     Bconst (float):Calculates the B, uniform magnetic field strength
@@ -44,23 +40,20 @@ def b_field(rs, ri, Tkin):
 
     return Bconst
 
-def steady_state(flux, rs, ri, rap, tot_prot, num_bins):
+
+def steady_state(flux, num_bins, rap, rs, ri, tot_prot):
     '''
     The goal is the obtain the steady-state diffusion Equation
+
     Parameters
     ----------
-    flux (2D array):
-        Number of protons per bin
-    rs (float) :
-        Lenght from implosion to screen
-    ri (float):
-        Length from implosion to interaction region
-    rap (float):
-        Aperature of the cone that is collimated to screen
-    tot_prot (float):
-        Number of protons from the original capsule impolsion
-    num_bins (int):
-        Bin per dimenison
+    flux (2D array): Number of protons per bin
+    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    rap (float): Aperature of the cone that is collimated to screen
+    rs (float) : Lenght from implosion to screen
+    ri (float): Length from implosion to interaction region
+    tot_prot (float): Number of protons from the original capsule impolsion
+
     Returns
     -------
     Lam (2D array): fluence contrast
@@ -71,10 +64,10 @@ def steady_state(flux, rs, ri, rap, tot_prot, num_bins):
     # Distrubtion of the stream of protons
     avg_fluence = tot_prot/(math.pi * radius**2)
 
-    ru.dmax = MARG * radius / math.sqrt(2.0)  # variable in rad_ut
-    ru.delta = 2.0 * ru.dmax / num_bins  # variable in rad_ut
+    ru.dmax = MARG * radius / math.sqrt(2.0)
+    ru.delta = 2.0 * ru.dmax / num_bins
+    Lam = np.ones((num_bins,num_bins))
     # Obtaining the fluence contrast
-    Lam = np.zeros((num_bins, num_bins))
     a = np.multiply(avg_fluence,np.divide((ru.delta**2),flux)) # variable to break the equation into smaller parts
     Lam = np.multiply(2,np.subtract(1,np.sqrt(a))) # setting the fluence contrast
     # Obtaining the exponential fluence contrast
@@ -82,6 +75,7 @@ def steady_state(flux, rs, ri, rap, tot_prot, num_bins):
     # Source Term
     Src = np.multiply(Lam,ExpLam) # RHS of the Steady-State Diffusion Equation
     return (Src,Lam)
+
 
 def D(i, j, y):
     '''
@@ -93,6 +87,7 @@ def D(i, j, y):
           + ru.bc_enforce_N(y, i,j-1) )
     return d
 
+
 def O(i, j, x, y):
     '''
     Supplemental function used during Gauss-Seidel Iteration
@@ -103,38 +98,31 @@ def O(i, j, x, y):
         + ru.bc_enforce_D(x, i,j-1) * (ru.bc_enforce_N(y, i,j-1) + y[i,j]))
     return a
 
-def B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin):
+
+def B_Recon(flux, num_bins, rap, rs, ri, tot_prot, Tkin):
     '''
     Produces a reconstructed magnetic field
+
     Parameters
     ----------
-    flux (2D array):
-        Number of protons per bin
-    rs (float) :
-        Lenght from implosion to screen
-    ri (float):
-        Length from implosion to interaction region
-    rap (float):
-        Aperature of the cone that is collimated to screen
-    tot_prot (float):
-        Number of protons from the original capsule impolsion
-    num_bins (int):
-        Bin per dimenison
-    Tkin (float):
-        Kinetic Energy
+    flux (2D array): Number of protons per bin
+    rap (float): Aperature of the cone that is collimated to screen
+    rs (float) : Lenght from implosion to screen
+    ri (float): Length from implosion to interaction region
+    tot_prot (float): Number of protons from the original capsule impolsion
+    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    Tkin (float): Kinetic Energy
+
     Returns
     -------
-    B_R (2D array of (x,y)):
-        Reconstructed Magnetic Field
+    B_R (2D array of (x,y)): Reconstructed Magnetic Field
     '''
     print ("Min Pixel Count: %12.5E\nMax Pixel Count: %12.5E\n"
            "Mean Pixel Count: %12.5E"
            %(flux.min(),flux.max(),flux.mean()))
-    # RHS of the Steady-State Diffusion Equation
-    Src = steady_state(flux, rs, ri, rap, tot_prot, num_bins)[0]
-    # Fluence Contrast
-    Lam = steady_state(flux, rs, ri, rap, tot_prot, num_bins)[1]
-    # Initial guess by FFT Poisson solve
+    # RHS of the Steady-State Diffusion Equation and Fluence Contrast
+    Src,Lam = steady_state(flux, num_bins, rap, rs, ri, tot_prot)
+    # The real component after Lam is transformed then convolved and then inversely transformed
     phi = ru.solve_poisson(Lam)
     # Iterate to solution
     GS = ru.Gauss_Seidel(phi, np.exp(Lam), D, O, Src, talk=20, tol=TOL_ITER, maxiter=MAX_ITER)
@@ -154,6 +142,7 @@ def B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin):
             B_R[i,j,1] = -Bconst * deltaX[i,j,0]
 
     return B_R
+
 
 def flux_image(filename, num_bins):
     #Data file descriptor
@@ -197,3 +186,9 @@ def flux_image(filename, num_bins):
         if rec_prot == plimit: break
         line = data.readline()
     return count
+
+x = flux_image(sys.argv[1],128)
+# Src,Lam=steady_state(x, 128, 2.00000E-01,1.00000E+02,1.00000E+01,10000000)
+# print "Src:",Src
+# print "Lam:",Lam
+B_Recon(x, 128, 2.00000E-01,1.00000E+02,1.00000E+01,10000000,14.7)

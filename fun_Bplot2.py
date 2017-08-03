@@ -3,86 +3,58 @@ import sys
 
 import rad_ut as ru
 import fun_reconstruct as fr
+from constants import M_PROTON_G, ESU, C, V_PER_E, MARG
 
 import numpy as np
 
-def magnetic_field(flux, rs, ri, rap, tot_prot, num_bins, Tkin):
+def magnetic_field(flux, rap, rs, ri, tot_prot, num_bins, Tkin):
     '''
     The goal is to calculate the magnetic field per bin
+
     Parameters
     ----------
-    flux (2D array):
-        Number of protons per bin
-    rs (float) :
-        Lenght from implosion to screen
-    ri (float):
-        Length from implosion to interaction region
-    rap (float):
-        Aperature of the cone that is collimated to screen
-    tot_prot (float):
-        Number of protons from the original capsule impolsion
-    num_bins (int):
-        Bin per dimenison
-    Tkin (float):
-        Kinetic Energy
+    flux (2D array): Number of protons per bin
+    rap (float): Aperature of the cone that is collimated to screen
+    rs (float): Lenght from implosion to screen
+    ri (float): Length from implosion to interaction region
+    tot_prot (float): Number of protons from the original capsule impolsion
+    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    Tkin (float): Kinetic Energy
+
     Returns
     -------
     BrMag (2D array): B Field per bin
     '''
     BrMag = np.zeros((num_bins,num_bins))
+    Br = fr.B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin)
     for i in range(num_bins):
         for j in range(num_bins):
-            Br = fr.B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin)
             BrMag = 0.5*math.log10(Br[i,j,0]**2 + Br[i,j,1]**2)
     return BrMag
 
-def position(num_bins):
-    '''
-    Obtain the positon of each bin
-    Parameters
-    ----------
-    num_bins (int):
-        Bin per dimenison
-    Returns
-    -------
-    X (2D array): The x position
-    Y (2D array): The y position
-    '''
-    X = np.zeros((nbins,nbins))
-    Y = np.zeros((nbins,nbins))
-    for i in range(num_bins):
-        for j in range(num_bins):
-            x = ru.idx2vec((i,j))
-            X[i,j] = x[0]
-            Y[i,j] = x[1]
-    return (X,Y)
 
-def BR_plot(flux, rs, ri, rap, tot_prot, num_bins, Tkin):
+def BR_plot(flux, rap, rs, ri , tot_prot, num_bins, Tkin):
     '''
-    Genereates the Log Reconstructed B perpendicularn Projection
+    Genereates the Log Reconstructed B perpendicular Projection
+
     Parameters
     ----------
-    flux (2D array):
-        Number of protons per bin
-    rs (float) :
-        Lenght from implosion to screen
-    ri (float):
-        Length from implosion to interaction region
-    rap (float):
-        Aperature of the cone that is collimated to screen
-    tot_prot (float):
-        Number of protons from the original capsule impolsion
-    num_bins (int):
-        Bin per dimenison
-    Tkin (float):
-        Kinetic Energy
+    flux (2D array): Number of protons per bin
+    rs (float) : Lenght from implosion to screen
+    ri (float): Length from implosion to interaction region
+    rap (float): Aperature of the cone that is collimated to screen
+    tot_prot (float): Number of protons from the original capsule impolsion
+    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    Tkin (float): Kinetic Energy
+
     Returns
     -------
     B_Reconstructed.png
     '''
+    print (r"Constructing Reconstructed $B_\perp$ Projection Plot")
     BR = fr.B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin)
     BrMag = magnetic_field(flux, rs, ri, rap, tot_prot, num_bins, Tkin)
-    X,Y = position(128)
+    X,Y = ru.position(128)
     # Intiating Plot
     fig  = plt.figure()
     fig.set_figwidth(7.7)
