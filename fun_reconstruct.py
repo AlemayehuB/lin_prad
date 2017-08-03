@@ -186,9 +186,3 @@ def flux_image(filename, num_bins):
         if rec_prot == plimit: break
         line = data.readline()
     return count
-
-#x = flux_image(sys.argv[1],128)
-# Src,Lam=steady_state(x, 128, 2.00000E-01,1.00000E+02,1.00000E+01,10000000)
-# print "Src:",Src
-# print "Lam:",Lam
-#B_Recon(x, 128, 2.00000E-01,1.00000E+02,1.00000E+01,10000000,14.7)

@@ -70,6 +70,3 @@ def BR_plot(flux, rap, rs, ri , tot_prot, num_bins, Tkin):
     ax.tick_params(labelsize='large')
 
     fig.savefig("B_Reconstructed.png", format='png')
-
-x = fr.flux_image(sys.argv[1],128)
-BR_plot(x, 1.00000E+02, 1.00000E+01, 2.00000E-01, 10000000, 128, 14.7)
