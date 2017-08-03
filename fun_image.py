@@ -1,7 +1,7 @@
 import math
 import sys
 
-import rad_ut as ru
+import fun_rad_ut as ru
 import fun_reconstruct as fr
 from constants import M_PROTON_G, ESU, C, V_PER_E, MARG
 
