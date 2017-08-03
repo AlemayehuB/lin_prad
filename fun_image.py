@@ -121,8 +121,3 @@ def flux_plot(flux,num_bins,rap, rs, ri):
     plt.colorbar(p)
     ax.set_title("Counts/Bin",fontdict=font)
     fig.savefig("Flux.png", format='png')
-
-x = fr.flux_image(sys.argv[1],128)
-print "why is B_Recon runnning?"
-fluct_plot(x,128,  2.00000E-01,1.00000E+02,1.00000E+01, 10000000)
-flux_plot(x,128,  2.00000E-01,1.00000E+02,1.00000E+01)
