@@ -43,6 +43,7 @@ def fluct(flux, num_bins,rap, rs, ri, tot_prot):
                 Fluct[i,j] = 2.0 * ( 1.0 - math.sqrt(avg_fluence * delta**2/flux[i,j]))
     return Fluct
 
+
 def fluct_plot(flux, num_bins,rap, rs, ri, tot_prot):
     '''
     Genereates the a plot that shows the number of
@@ -81,6 +82,7 @@ def fluct_plot(flux, num_bins,rap, rs, ri, tot_prot):
     plt.colorbar(p)
     ax.set_title("Fluence Contrast", fontdict=font)
     fig.savefig("Fluence_Contrast.png", format='png')
+
 
 def flux_plot(flux,num_bins,rap, rs, ri):
     '''
@@ -121,5 +123,6 @@ def flux_plot(flux,num_bins,rap, rs, ri):
     fig.savefig("Flux.png", format='png')
 
 x = fr.flux_image(sys.argv[1],128)
-#fluct_plot(x,128,  2.00000E-01,1.00000E+02,1.00000E+01, 10000000)
+print "why is B_Recon runnning?"
+fluct_plot(x,128,  2.00000E-01,1.00000E+02,1.00000E+01, 10000000)
 flux_plot(x,128,  2.00000E-01,1.00000E+02,1.00000E+01)
