@@ -21,7 +21,7 @@ def fluct(flux, num_bins,rap, rs, ri, tot_prot):
     Parameters
     ----------
     flux (2D array): Number of protons per bin
-    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    num_bins (int): Float, size of the square edge lengths with which to divide the detector for binning
     rap (float): Aperature of the cone that is collimated to screen
     rs (float): Lenght from implosion to screen
     ri (float): Length from implosion to interaction region
@@ -52,7 +52,7 @@ def fluct_plot(flux, num_bins,rap, rs, ri, tot_prot):
     Parameters
     ----------
     flux (2D array): Number of protons per bin
-    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    num_bins (int): Float, size of the square edge lengths with which to divide the detector for binning
     rap (float): Aperature of the cone that is collimated to screen
     rs (float): Lenght from implosion to screen
     ri (float): Length from implosion to interaction region
@@ -92,7 +92,7 @@ def flux_plot(flux,num_bins,rap, rs, ri):
     Parameters
     ----------
     flux (2D array): Number of protons per bin
-    num_bins (int): Number of pixels in one dimension(num_bins x num_bins)
+    num_bins (int): Float, size of the square edge lengths with which to divide the detector for binning
     rap (float): Aperature of the cone that is collimated to screen
     rs (float) : Lenght from implosion to screen
     ri (float): Length from implosion to interaction region
