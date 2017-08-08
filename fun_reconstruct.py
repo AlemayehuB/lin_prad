@@ -32,7 +32,7 @@ def b_field(rs, ri, Tkin):
 
     Returns
     -------
-    Bconst (float):Calculates the B, uniform magnetic field strength
+    Bconst (float): Calculates the B, uniform magnetic field strength
     '''
     v = math.sqrt(2 * (Tkin*V_PER_E) / M_PROTON_G) # Velocity of Proton
 
@@ -57,7 +57,7 @@ def steady_state(flux, num_bins, rap, rs, ri, tot_prot):
     Returns
     -------
     Lam (2D array): fluence contrast
-    Src(2D array): Source term from multiplying the fluence contrast and exp(fluence contrast)
+    Src (2D array): Source term from multiplying the fluence contrast and exp(fluence contrast)
     '''
     # radius of undeflected image of aperture at screen
     radius = rap * rs / ri
@@ -74,6 +74,7 @@ def steady_state(flux, num_bins, rap, rs, ri, tot_prot):
     ExpLam = np.exp(Lam)
     # Source Term
     Src = np.multiply(Lam,ExpLam) # RHS of the Steady-State Diffusion Equation
+
     return (Src,Lam)
 
 
@@ -85,6 +86,7 @@ def D(i, j, y):
           + ru.bc_enforce_N(y, i-1,j)
           + ru.bc_enforce_N(y, i,j+1)
           + ru.bc_enforce_N(y, i,j-1) )
+
     return d
 
 
@@ -96,6 +98,7 @@ def O(i, j, x, y):
         + ru.bc_enforce_D(x, i-1,j) * (ru.bc_enforce_N(y, i-1,j) + y[i,j])
         + ru.bc_enforce_D(x, i,j+1) * (ru.bc_enforce_N(y, i,j+1) + y[i,j])
         + ru.bc_enforce_D(x, i,j-1) * (ru.bc_enforce_N(y, i,j-1) + y[i,j]))
+
     return a
 
 
@@ -107,7 +110,7 @@ def B_Recon(flux, num_bins, rap, rs, ri, tot_prot, Tkin):
     ----------
     flux (2D array): Number of protons per bin
     rap (float): Aperature of the cone that is collimated to screen
-    rs (float) : Lenght from implosion to screen
+    rs (float): Lenght from implosion to screen
     ri (float): Length from implosion to interaction region
     tot_prot (float): Number of protons from the original capsule impolsion
     num_bins (int): Float, size of the square edge lengths with which to divide the detector for binning
@@ -142,47 +145,3 @@ def B_Recon(flux, num_bins, rap, rs, ri, tot_prot, Tkin):
             B_R[i,j,1] = -Bconst * deltaX[i,j,0]
 
     return B_R
-
-
-def flux_image(filename, num_bins):
-    #Data file descriptor
-    data = open(filename, 'r')
-    plimit =- 1
-    line = data.readline()
-    while not match('# Columns:', line): #Sets the variables
-
-            if match('# Tkin:', line):
-                Tkin = float(line.split()[2]) #Kinetic energy
-
-            elif match('# rs:', line):
-                rs = float(line.split()[2]) # Length from implosion to screen
-
-            elif match('# ri:', line):
-                ri = float(line.split()[2]) # Length from implosion to interaction region
-
-            elif match('# raperture:', line):
-                rap = float(line.split()[2]) # aperture
-
-            line = data.readline()
-    # The loop reads each line of the input until the data is reached.
-    while match('#', line): line = data.readline()
-    # Pixel Counts
-    count = np.zeros((num_bins, num_bins))
-    rec_prot =  0
-    radius = rap * rs / ri  # radius of undeflected image of aperture at screen
-    ru.dmax = MARG * radius / math.sqrt(2.0)  # variable in rad_ut
-    ru.delta = 2.0 * ru.dmax / num_bins  # variable in rad_ut
-    while line:
-        rec_prot += 1
-        line = line.split()
-        x_loc = float(line[3]) # Final X location at screen (cm)
-        y_loc = float(line[4]) # Final Y location at screen (cm)
-        i,j = ru.vec2idx((x_loc,y_loc))
-
-        #The if-statement places values in the lists
-        if (x_loc + ru.dmax)/ru.delta >= 0 and i < num_bins and (y_loc + ru.dmax)/ru.delta >= 0 and j < num_bins:
-            count[i,j] += 1
-
-        if rec_prot == plimit: break
-        line = data.readline()
-    return count

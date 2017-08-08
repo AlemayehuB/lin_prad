@@ -30,6 +30,7 @@ def magnetic_field(flux, rap, rs, ri, tot_prot, num_bins, Tkin):
     for i in range(num_bins):
         for j in range(num_bins):
             BrMag = 0.5*math.log10(Br[i,j,0]**2 + Br[i,j,1]**2)
+
     return BrMag
 
 

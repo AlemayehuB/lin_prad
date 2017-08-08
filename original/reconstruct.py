@@ -1,221 +1,190 @@
-'''
-Many of the variables are in reference to the paper,
-Inferring Morphology and Strength of Magnetic Fields From Proton Radiographs,
-This script will reconstruct magnetic fields given the data
-from a Proton Radiography experiment.
-'''
-from sys import argv
-from re import match
-import math
+#!/usr/bin/python
 
-import rad_ut as ru
-
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 import numpy as np
+import math
+import sys
+import re
+from scipy.fftpack import fftn, ifftn
+import rad_ut as ru
+from rad_ut import *
 
-
-#Data file descriptor
-data = open(argv[1], 'r')
-
-#Output file descriptor
-out = open(argv[2], 'w')
-
-#Proton limiter
-plimit =- 1
-if len(argv) > 3: plimit = int(argv[3])
-
-#Resolution of plot
-num_bins = 128
-if len(argv) > 4: num_bins = int(argv[4])
-
-#############Parsing Data File###################################################
-out.write("# Input filename: %s\n" % argv[1])
-line = data.readline()
-while not match('# Columns:', line): #Sets the variables
-
-        if match('# Tkin:', line):
-            Tkin = float(line.split()[2]) #Kinetic energy
-
-        elif match('# rs:', line):
-            rs = float(line.split()[2]) # Length from implosion to screen
-
-        elif match('# ri:', line):
-            ri = float(line.split()[2]) # Length from implosion to interaction region
-
-        elif match('# raperture:', line):
-            rap = float(line.split()[2]) # aperture
-
-        out.write(line)
-        line = data.readline()
-
-# The loop reads each line of the input until the data is reached.
-while match('#', line): line = data.readline()
-
-#############Setting Varibales###########################################
-#margin
+# Margin
 marg = 0.98
 
-# Gauss-Seidel iteration tolerance
+# Data file
+dfile = sys.argv[1]
+
+# Output file
+ofile = sys.argv[2]
+
+
+# Proton limiter
+plimit = -1
+if len(sys.argv) > 3:
+    plimit = int(sys.argv[3])
+
+# Resolution of plot
+nbins = 128
+if len(sys.argv) > 4:
+    nbins = int(sys.argv[4])
+nel = nbins**2
+    
+# GS iteration tolerance
 tol_iter = 1.0E-4
 
-# Maximum number of Gauss-Seidel iterations
+# Maximum number of GS iterations
 max_iter = 4000
 
+
+################################################################################
+
+out = open(ofile, 'w')
+fd = open(dfile, 'r')
+
+out.write("# Input filename: %s\n" % dfile)
+
+line = fd.readline()
+while not re.search('^# Columns:', line):
+    
+    if re.search('^# Tkin:', line):
+        Tkin = float(line.split()[2])
+    
+    if re.search('^# rs:', line):
+        rs = float(line.split()[2])
+    
+    if re.search('^# ri:', line):
+        ri = float(line.split()[2])
+    
+    if re.search('^# raperture:', line):
+        rap = float(line.split()[2])
+    
+    out.write(line)
+    line = fd.readline()
+    
+while re.search('^#', line): line = fd.readline()
+
 radius = rap * rs / ri  # radius of undeflected image of aperture at screen
-ru.dmax = marg * radius / math.sqrt(2.0)  # variable in rad_ut
-ru.delta = 2.0 * ru.dmax / num_bins  # variable in rad_ut
+ru.dmax = marg * radius / math.sqrt(2.0)
+ru.delta = 2.0 * ru.dmax / nbins
 delta_i = ru.delta * ri / rs
 
 e = 4.8032E-10   # Statcoul
-m = 1.6726E-24  # mass of proton (g)
-c = 2.9979E+10   # Speed of light (cm/s)
-VperE= 1.6022E-06 # 1 MeV / 1 erg
-v = math.sqrt(2 * (Tkin*VperE) / m) # Velocity of Proton
-Bconst = m * c * v / (e * (rs-ri)) #Uniform field Strength
+mp = 1.6726E-24  # g
+c = 2.9979E+10   # cm/s
+ergperMeV = 1.6022E-06 # 1 MeV / 1 erg
+v = math.sqrt(2*(Tkin*ergperMeV)/mp)
+Bconst = mp * c * v / (e * (rs-ri))
 
-rec_prot=0 #number of recovered protons that hit the collimated square image
+C = np.zeros((nbins,nbins))
+J = np.zeros((nbins,nbins))
+JS = np.zeros((nbins,nbins))
+Lam = np.zeros((nbins,nbins))
+LamS = np.zeros((nbins,nbins))
+ExpLam = np.zeros((nbins,nbins))
+Src = np.zeros((nbins,nbins))
+Bperp = np.zeros((nbins,nbins,2))
+BperpR = np.zeros((nbins,nbins,2))
+BperpS = np.zeros((nbins,nbins,2))
+deltaX = np.zeros((nbins,nbins,2))
+deltaXR = np.zeros((nbins,nbins,2))
+deltaXS = np.zeros((nbins,nbins,2))
 
-# Pixel Counts
-count = np.zeros((num_bins, num_bins))
-# Current integrals
-cur_int = np.zeros((num_bins, num_bins))
-# Position-corrected Current integrals
-cur_intS = np.zeros((num_bins, num_bins))
-# Fluence Contrast
-Lam = np.zeros((num_bins, num_bins))
-# Position-corrected Fluence Contrast
-LamS = np.zeros((num_bins, num_bins))
-# B Field Integral
-B = np.zeros((num_bins, num_bins, 2))
-# Reconstructed perpendicular B Fields
-B_R = np.zeros((num_bins, num_bins,2))
-#True perpendicular B Fields
-B_S = np.zeros((num_bins, num_bins,2))
-# Lateral motion of proton
-deltaX = np.zeros((num_bins, num_bins,2))
-# Reconstructed Lateral motion of proton
-deltaXR = np.zeros((num_bins, num_bins,2))
-# True Lateral motion of proton
-deltaXS = np.zeros((num_bins, num_bins,2))
-
-################################################################################
-while line:
-    rec_prot += 1
-    line = line.split()
-    x_i = float(line[0]) # Initial normal vector X-component
-    y_i = float(line[1]) # Initial normal vector Y-component
-    x_loc = float(line[3]) # Final X location at screen (cm)
-    y_loc = float(line[4]) # Final Y location at screen (cm)
-    current = float(line[8]) # Current integral
-    Bx = float(line[9]) # Bx Integral
-    By = float(line[10]) # By Integral
-    i,j = ru.vec2idx((x_loc,y_loc))
-
-    #The if-statement places values in the lists
-    if (x_loc + ru.dmax)/ru.delta >= 0 and i < num_bins and (y_loc + ru.dmax)/ru.delta >= 0 and j < num_bins:
-        count[i,j] += 1
-        B[i,j,0] += Bx
-        B[i,j,1] += By
-        deltaX[i,j,0] += (x_loc - x_i*rs)
-        deltaX[i,j,1] += (y_loc - y_i*rs)
-        cur_int[i,j] += current
-
-    if rec_prot == plimit: break
-    line = data.readline()
-data.close()
-
- #Distrubtion of the stream of protons
-avg_fluence = rec_prot/(math.pi * radius**2)
-
-################################################################################
-buf = "# num_bins = %d ; delta =  %12.5E\n" % (num_bins, ru.delta)
+buf = "# nbins = %d ; delta = %12.5E\n" % (nbins, ru.delta)
 out.write(buf)
-print "Reading %s, binning %d x %d..." % (argv[1], num_bins, num_bins)
 
-buf = "Read %d protons, of which %d in square window." % (rec_prot, count.sum())
-print buf
+print "Reading %s, binning %d x %d..." % (dfile, nbins, nbins)
+
+nprot = 0
+while line:
+    nprot += 1
+    nx = float(line.split()[0])
+    ny = float(line.split()[1])
+    xx= float(line.split()[3])
+    yy= float(line.split()[4])
+    jj = float(line.split()[8])
+    b0 = float(line.split()[9])
+    b1 = float(line.split()[10])
+    idx = vec2idx((xx,yy))
+    i = idx[0] ; j = idx[1]
+    
+    if (xx + ru.dmax)/ru.delta >= 0 and i < nbins and (yy + ru.dmax)/ru.delta >= 0 and j < nbins:
+        C[i,j] += 1
+        Bperp[i,j,0] += b0
+        Bperp[i,j,1] += b1
+        deltaX[i,j,0] += (xx - nx*rs)
+        deltaX[i,j,1] += (yy - ny*rs)
+        J[i,j] += jj
+
+    if nprot == plimit: break
+    line = fd.readline()
+    
+fd.close()
+
+buf = "Read %d protons, of which %d in square window." % (nprot, C.sum())
+print "done. " + buf
 out.write("# %s\n" % buf)
 
-buf = ("Min Pixel Count: %12.5E\nMax Pixel Count: %12.5E\n"
-       "Mean Pixel Count: %12.5E\nDelta: %12.5E "
-       %(count.min(),count.max(),count.mean(),ru.delta))
-print buf
+print "Min, max, mean pixel counts, and delta:"
+print C.min(), C.max(), C.mean(), ru.delta
 
-#############Matrix Operations#######################################################
-try:
-    ##########B Field################
-    B.shape=(num_bins*num_bins,2)
-    count.shape=(num_bins*num_bins,1)
-    B = np.divide(B,count)
-    B.shape=(num_bins,num_bins,2)
+avg_fluence = nprot / (math.pi * radius**2)
 
-    ##########deltaX##################
-    deltaX.shape=(num_bins*num_bins,2)
-    deltaX = np.divide(deltaX,count)
-    deltaX.shape=(num_bins,num_bins,2)
-
-    #########Current Integral#################
-    count.shape=(num_bins, num_bins)
-    cur_int = np.divide(cur_int,count)
-
-    #########Lams#####################
-    pre_Lam=np.multiply(avg_fluence,np.divide((ru.delta**2),count))
-    Lam=np.multiply(2,np.subtract(1,np.sqrt(pre_Lam)))
-    ExpLam = np.exp(Lam)
-    Src = np.multiply(Lam,ExpLam) #Steady-State Diffusion Equation
-
-except ZeroDivisionError:
-    print "Zero pixel, will screw everything up."
-    raise ValueError
-#############Gauss-Seidel iterations#########################################################
+for i in range(nbins):
+    for j in range(nbins):
+        try: 
+            Bperp[i,j,:] /= C[i,j]
+            deltaX[i,j,:] /= C[i,j]
+            J[i,j] /= C[i,j]
+            Lam[i,j] = 2.0 * ( 1.0 - math.sqrt(avg_fluence * ru.delta**2/C[i,j]) )
+            ExpLam[i,j] = math.exp(Lam[i,j])
+            Src[i,j] = Lam[i,j] * ExpLam[i,j]
+        except ZeroDivisionError:
+            print "Zero pixel, will screw everything up."
+            raise ValueError
+        
 print "Gauss-Seidel Iteration..."
 
 def D(i,j):
-    d = -2.0 * ExpLam[i,j] - 0.5 * ( ru.bc_enforce_N(ExpLam, i+1,j)
-          + ru.bc_enforce_N(ExpLam, i-1,j)
-          + ru.bc_enforce_N(ExpLam, i,j+1)
-          + ru.bc_enforce_N(ExpLam, i,j-1) )
+    d = -2.0 * ExpLam[i,j] - 0.5 * ( bc_enforce_N(ExpLam, i+1,j) + \
+                                     bc_enforce_N(ExpLam, i-1,j) + \
+                                     bc_enforce_N(ExpLam, i,j+1) + \
+                                     bc_enforce_N(ExpLam, i,j-1) )
     return d
 
 def O(i,j, x):
-    a = 0.5 * ( ru.bc_enforce_D(x, i+1,j) * (ru.bc_enforce_N(ExpLam, i+1,j) + ExpLam[i,j])
-        + ru.bc_enforce_D(x, i-1,j) * (ru.bc_enforce_N(ExpLam, i-1,j) + ExpLam[i,j])
-        + ru.bc_enforce_D(x, i,j+1) * (ru.bc_enforce_N(ExpLam, i,j+1) + ExpLam[i,j])
-        + ru.bc_enforce_D(x, i,j-1) * (ru.bc_enforce_N(ExpLam, i,j-1) + ExpLam[i,j]))
+    a = 0.5 * ( bc_enforce_D(x, i+1,j) * (bc_enforce_N(ExpLam, i+1,j) + ExpLam[i,j]) +\
+                bc_enforce_D(x, i-1,j) * (bc_enforce_N(ExpLam, i-1,j) + ExpLam[i,j]) +\
+                bc_enforce_D(x, i,j+1) * (bc_enforce_N(ExpLam, i,j+1) + ExpLam[i,j]) +\
+                bc_enforce_D(x, i,j-1) * (bc_enforce_N(ExpLam, i,j-1) + ExpLam[i,j]) )
     return a
 
 # Initial guess by FFT Poisson solve
-phi = ru.solve_poisson(Lam)
+phi = solve_poisson(Lam)
 
 # Iterate to solution
-GS = ru.Gauss_Seidel(phi, D, O, Src, talk=20, tol=tol_iter, maxiter=max_iter)
+GS = Gauss_Seidel(phi, D, O, Src, talk=20, tol=tol_iter, maxiter=max_iter)
 
 phi *= ru.delta**2
 
-
-for i in range(num_bins):
-    for j in range(num_bins):
-        #Reconstructed Data
-        deltaXR[i,j] = -ru.gradient(phi, (i,j))
-        B_R[i,j,0] = Bconst * deltaXR[i,j,1]
-        B_R[i,j,1] = -Bconst * deltaXR[i,j,0]
-
-        #True Data
-        x = ru.idx2vec((i,j))
+for i in range(nbins):
+    for j in range(nbins):
+        deltaXR[i,j] = -gradient(phi, (i,j))
+        BperpR[i,j,0] = Bconst * deltaXR[i,j,1]
+        BperpR[i,j,1] = -Bconst * deltaXR[i,j,0]
+        x = idx2vec((i,j))
         x = x + deltaXR[i,j]
-        idx = ru.vec2idx(x)
-        ii = idx[0] % num_bins
-        jj = idx[1] % num_bins
-        B_S[i,j,:] = B[ii, jj, :]
-        deltaXS[i,j,:] = deltaX[ii, jj, :]
-        cur_intS[i,j] = cur_int[ii, jj]
-        LamS[i,j] = Lam[ii, jj]
+        idx = vec2idx(x)
+        BperpS[i,j,:] = Bperp[idx[0]%nbins, idx[1]%nbins, :]
+        deltaXS[i,j,:] = deltaX[idx[0]%nbins, idx[1]%nbins, :]
+        JS[i,j] = J[idx[0]%nbins, idx[1]%nbins]
+        LamS[i,j] = Lam[idx[0]%nbins, idx[1]%nbins]
 
+EB = BperpS.flatten().dot(BperpS.flatten()) * delta_i**2
+EBR = BperpR.flatten().dot(BperpR.flatten()) * delta_i**2
+L2B = fnorm(BperpR-BperpS)/fnorm(BperpS)
 
-EB = B_S.flatten().dot(B_S.flatten()) * delta_i**2 # True B Field
-EBR = B_R.flatten().dot(B_R.flatten()) * delta_i**2 # Reconstructed B Field
-L2B = ru.fnorm(B_R-B_S)/ru.fnorm(B_S) # L2 norm
-
-#############Output Data################################################
 buf = "EB = %12.5E ; EB_Reconstructed = %12.5E" % (EB, EBR)
 print "...done.  " + buf
 out.write("# %s\n" % buf)
@@ -230,31 +199,34 @@ out.write("#L2 norm of residual = %12.5E ;  Number of Gauss-Seidel iterations = 
 
 out.write('# Column 1: x index\n')
 out.write('# Column 2: y index\n')
-out.write('# Column 3: x position\n')
-out.write('# Column 4: y position\n')
-out.write('# Column 5: Bx (True)\n')
-out.write('# Column 6: By (True)\n')
-out.write('# Column 7: Bx (Reconstructed)\n')
-out.write('# Column 8: By (Reconstructed)\n')
-out.write('# Column 9: Delta_x (True)\n')
-out.write('# Column 10: Delta_y (True)\n')
-out.write('# Column 11: Delta_x (Reconstructed)\n')
-out.write('# Column 12: Delta_y (Reconstructed)\n')
+out.write('# Column 3: x\n')
+out.write('# Column 4: y\n')
+out.write('# Column 5: Bx (actual)\n')
+out.write('# Column 6: By (actual)\n')
+out.write('# Column 7: Bx (solver)\n')
+out.write('# Column 8: By (solver)\n')
+out.write('# Column 9: Delta_x (actual)\n')
+out.write('# Column 10: Delta_y (actual)\n')
+out.write('# Column 11: Delta_x (solver)\n')
+out.write('# Column 12: Delta_y (solver)\n')
 out.write('# Column 13: Position-corrected Lambda\n')
 out.write('# Column 14: Position-corrected current integral\n')
 
-for i in range(num_bins):
-    for j in range(num_bins):
+for i in range(nbins):
+    for j in range(nbins):
 
-        x = ru.idx2vec((i,j))
+        x = idx2vec((i,j))
         line = ("%3d  %3d  %12.5E  %12.5E  %12.5E  %12.5E  %12.5E  %12.5E  " +\
                "%12.5E  %12.5E  %12.5E  %12.5E  %12.5E  %12.5E\n") %\
                (i, j, x[0], x[1], \
-                B_S[i,j,0], B_S[i,j,1], \
-                B_R[i,j,0], B_R[i,j,1], \
+                BperpS[i,j,0], BperpS[i,j,1], \
+                BperpR[i,j,0], BperpR[i,j,1], \
                 deltaXS[i,j,0], deltaXS[i,j,1], \
                 deltaXR[i,j,0], deltaXR[i,j,1], \
-                LamS[i,j], cur_intS[i,j] )
-
+                LamS[i,j], JS[i,j] )
+                
         out.write(line)
 out.close()
+
+
+

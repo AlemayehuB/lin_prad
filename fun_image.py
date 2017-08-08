@@ -41,6 +41,7 @@ def fluct(flux, num_bins,rap, rs, ri, tot_prot):
         for j in range(num_bins):
             if flux[i,j] >= Cmin:
                 Fluct[i,j] = 2.0 * ( 1.0 - math.sqrt(avg_fluence * delta**2/flux[i,j]))
+
     return Fluct
 
 
