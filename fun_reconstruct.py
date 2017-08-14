@@ -9,7 +9,7 @@ import math
 from re import match
 
 import fun_rad_ut as ru
-from constants import M_PROTON_G, ESU, C, V_PER_E, MARG
+from constants import M_PROTON_G, ESU, C, V_PER_E
 
 import numpy as np
 
@@ -26,8 +26,8 @@ def b_field(rs, ri, Tkin):
 
     Parameters
     ----------
-    rs (float): Lenght from implosion to screen
-    ri (float): Length from implosion to interaction region
+    rs (float): Distance from the proton source to the detector, in cm
+    ri (float): Distance from the proton source to the interaction region, in cm
     Tkin (float): Kinetic energy
 
     Returns
@@ -36,40 +36,37 @@ def b_field(rs, ri, Tkin):
     '''
     v = math.sqrt(2 * (Tkin*V_PER_E) / M_PROTON_G) # Velocity of Proton
 
-    Bconst = M_PROTON_G * C * v / (ESU * (rs-ri)) #Uniform field Strength
+    Bconst = M_PROTON_G * C * v / (ESU * (rs-ri)) # Uniform B Field Strength
 
     return Bconst
 
 
-def steady_state(flux, num_bins, rap, rs, ri, tot_prot):
+def steady_state(flux, flux_ref, rs, ri):
     '''
     The goal is the obtain the steady-state diffusion Equation
 
     Parameters
     ----------
     flux (2D array): Number of protons per bin
-    num_bins (int): Float, size of the square edge lengths with which to divide the detector for binning
-    rap (float): Aperature of the cone that is collimated to screen
-    rs (float) : Lenght from implosion to screen
-    ri (float): Length from implosion to interaction region
-    tot_prot (float): Number of protons from the original capsule impolsion
+    flux_ref (2D array): Number protons per bin without an interaction region
+    rs (float): Distance from the proton source to the detector, in cm
+    ri (float): Distance from the proton source to the interaction region, in cm
 
     Returns
     -------
     Lam (2D array): fluence contrast
     Src (2D array): Source term from multiplying the fluence contrast and exp(fluence contrast)
     '''
-    # radius of undeflected image of aperture at screen
-    radius = rap * rs / ri
-    # Distrubtion of the stream of protons
-    avg_fluence = tot_prot/(math.pi * radius**2)
-
-    ru.dmax = MARG * radius / math.sqrt(2.0)
-    ru.delta = 2.0 * ru.dmax / num_bins
+    num_bins = flux_ref.shape[0] # num_bins x num_bins
     Lam = np.ones((num_bins,num_bins))
     # Obtaining the fluence contrast
-    a = np.multiply(avg_fluence,np.divide((ru.delta**2),flux)) # variable to break the equation into smaller parts
-    Lam = np.multiply(2,np.subtract(1,np.sqrt(a))) # setting the fluence contrast
+    Lam = np.divide(np.subtract(flux,flux_ref), flux_ref)
+    # for i in range(num_bins):
+    #     for j in range(num_bins):
+    #         if flux[i,j] == 0:
+    #             Lam[i,j] == 0
+    #         else:
+    #             Lam[i,j] = 2.0 * ( 1.0 - math.sqrt(flux_ref[i,j]/flux[i,j]))
     # Obtaining the exponential fluence contrast
     ExpLam = np.exp(Lam)
     # Source Term
@@ -102,34 +99,34 @@ def O(i, j, x, y):
     return a
 
 
-def B_Recon(flux, num_bins, rap, rs, ri, tot_prot, Tkin):
+def B_Recon(flux, flux_ref, rs, ri, bin_um, Tkin):
     '''
     Produces a reconstructed magnetic field
 
     Parameters
     ----------
     flux (2D array): Number of protons per bin
-    rap (float): Aperature of the cone that is collimated to screen
-    rs (float): Lenght from implosion to screen
-    ri (float): Length from implosion to interaction region
-    tot_prot (float): Number of protons from the original capsule impolsion
-    num_bins (int): Float, size of the square edge lengths with which to divide the detector for binning
+    flux_ref (2D array): Number protons per bin without an interaction region
+    rs (float): Distance from the proton source to the detector, in cm
+    ri (float): Distance from the proton source to the interaction region, in cm
+    bin_um (float): Length of the side of a bin, in cm
     Tkin (float): Kinetic Energy
 
     Returns
     -------
     B_R (2D array of (x,y)): Reconstructed Magnetic Field
     '''
-    print ("Min Pixel Count: %12.5E\nMax Pixel Count: %12.5E\n"
-           "Mean Pixel Count: %12.5E"
-           %(flux.min(),flux.max(),flux.mean()))
+    ru.delta = bin_um
+    num_bins = flux_ref.shape[0] # num_bins x num_bins
     # RHS of the Steady-State Diffusion Equation and Fluence Contrast
-    Src,Lam = steady_state(flux, num_bins, rap, rs, ri, tot_prot)
+    Src,Lam = steady_state(flux, flux_ref, rs, ri)
     # The real component after Lam is transformed then convolved and then inversely transformed
     phi = ru.solve_poisson(Lam)
     # Iterate to solution
+    print "Gauss-Seidel Iteration..."
     GS = ru.Gauss_Seidel(phi, np.exp(Lam), D, O, Src, talk=20, tol=TOL_ITER, maxiter=MAX_ITER)
-    phi *= ru.delta**2
+    # Multiplying by the area of the bin
+    phi *= (ru.delta**2)
     # Uniform B Field Strength
     Bconst = b_field(rs, ri, Tkin)
     # Reconstructed perpendicular B Fields
@@ -145,3 +142,46 @@ def B_Recon(flux, num_bins, rap, rs, ri, tot_prot, Tkin):
             B_R[i,j,1] = -Bconst * deltaX[i,j,0]
 
     return B_R
+
+def flux_image(filename, num_bins):
+    #Data file descriptor
+    data = open(filename, 'r')
+    plimit =- 1
+    line = data.readline()
+    while not match('# Columns:', line): #Sets the variables
+
+            if match('# Tkin:', line):
+                Tkin = float(line.split()[2]) #Kinetic energy
+
+            elif match('# rs:', line):
+                rs = float(line.split()[2]) # Length from implosion to screen
+
+            elif match('# ri:', line):
+                ri = float(line.split()[2]) # Length from implosion to interaction region
+
+            elif match('# raperture:', line):
+                rap = float(line.split()[2]) # aperture
+
+            line = data.readline()
+    # The loop reads each line of the input until the data is reached.
+    while match('#', line): line = data.readline()
+    # Pixel Counts
+    count = np.zeros((num_bins, num_bins))
+    rec_prot =  0
+    radius = rap * rs / ri  # radius of undeflected image of aperture at screen
+    ru.dmax = 0.98 * radius / math.sqrt(2.0)  # variable in rad_ut
+    ru.delta = 2.0 * ru.dmax / num_bins  # variable in rad_ut
+    while line:
+        rec_prot += 1
+        line = line.split()
+        x_loc = float(line[3]) # Final X location at screen (cm)
+        y_loc = float(line[4]) # Final Y location at screen (cm)
+        i,j = ru.vec2idx((x_loc,y_loc))
+
+        #The if-statement places values in the lists
+        if (x_loc + ru.dmax)/ru.delta >= 0 and i < num_bins and (y_loc + ru.dmax)/ru.delta >= 0 and j < num_bins:
+            count[i,j] += 1
+
+        if rec_prot == plimit: break
+        line = data.readline()
+    return count

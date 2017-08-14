@@ -30,7 +30,7 @@ nbins = 128
 if len(sys.argv) > 4:
     nbins = int(sys.argv[4])
 nel = nbins**2
-    
+
 # GS iteration tolerance
 tol_iter = 1.0E-4
 
@@ -47,22 +47,22 @@ out.write("# Input filename: %s\n" % dfile)
 
 line = fd.readline()
 while not re.search('^# Columns:', line):
-    
+
     if re.search('^# Tkin:', line):
         Tkin = float(line.split()[2])
-    
+
     if re.search('^# rs:', line):
         rs = float(line.split()[2])
-    
+
     if re.search('^# ri:', line):
         ri = float(line.split()[2])
-    
+
     if re.search('^# raperture:', line):
         rap = float(line.split()[2])
-    
+
     out.write(line)
     line = fd.readline()
-    
+
 while re.search('^#', line): line = fd.readline()
 
 radius = rap * rs / ri  # radius of undeflected image of aperture at screen
@@ -108,7 +108,7 @@ while line:
     b1 = float(line.split()[10])
     idx = vec2idx((xx,yy))
     i = idx[0] ; j = idx[1]
-    
+
     if (xx + ru.dmax)/ru.delta >= 0 and i < nbins and (yy + ru.dmax)/ru.delta >= 0 and j < nbins:
         C[i,j] += 1
         Bperp[i,j,0] += b0
@@ -119,7 +119,7 @@ while line:
 
     if nprot == plimit: break
     line = fd.readline()
-    
+
 fd.close()
 
 buf = "Read %d protons, of which %d in square window." % (nprot, C.sum())
@@ -133,7 +133,7 @@ avg_fluence = nprot / (math.pi * radius**2)
 
 for i in range(nbins):
     for j in range(nbins):
-        try: 
+        try:
             Bperp[i,j,:] /= C[i,j]
             deltaX[i,j,:] /= C[i,j]
             J[i,j] /= C[i,j]
@@ -143,7 +143,7 @@ for i in range(nbins):
         except ZeroDivisionError:
             print "Zero pixel, will screw everything up."
             raise ValueError
-        
+
 print "Gauss-Seidel Iteration..."
 
 def D(i,j):
@@ -224,9 +224,6 @@ for i in range(nbins):
                 deltaXS[i,j,0], deltaXS[i,j,1], \
                 deltaXR[i,j,0], deltaXR[i,j,1], \
                 LamS[i,j], JS[i,j] )
-                
+
         out.write(line)
 out.close()
-
-
-

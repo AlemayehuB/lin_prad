@@ -9,6 +9,3 @@ C = 2.9979E+10
 
 # 1 MeV / 1 erg
 V_PER_E = 1.6022E-06
-
-# MARGIN
-MARG = 0.98

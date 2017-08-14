@@ -1,6 +1,6 @@
 import math
 
-from constants import M_PROTON_G, ESU, C, V_PER_E, MARG
+from constants import M_PROTON_G, ESU, C, V_PER_E
 
 from scipy.fftpack import fftn, ifftn
 import numpy as np
@@ -18,18 +18,23 @@ def vec2idx(vec):
     j = int((vec[1] + dmax)/delta)
     return (i,j)
 
-def position(num_bins, rap, rs, ri):
-    radius = rap * rs / ri  # radius of undeflected image of aperture at screen
-    dmax = MARG * radius / math.sqrt(2.0)  # variable in rad_ut
-    delta = 2.0 * dmax / num_bins  # variable in rad_ut
-    X = np.zeros((num_bins,num_bins))
-    Y = np.zeros((num_bins,num_bins))
-    for i in range(num_bins):
-        for j in range(num_bins):
-            x = idx2vec((i,j))
-            X[i,j] = x[0]
-            Y[i,j] = x[1]
-    return (X,Y)
+def position(flux_ref, bin_um):
+    num_bins = flux_ref.shape[0]
+    print "num_bins:",num_bins
+    print bin_um
+    delta = bin_um/10000.0
+    print "delta:",delta
+    dmax = (delta * num_bins)/2.0
+    print "dmax:",dmax
+    x = np.zeros((num_bins+1, num_bins+1))
+    y = np.zeros((num_bins+1, num_bins+1))
+    for i in range(num_bins+1):
+        for j in range(num_bins+1):
+            xx = -dmax + i*delta
+            yy = -dmax + j*delta
+            x[i,j] = xx
+            y[i,j] = yy
+    return (x,y)
 
 def gradient(fn, idx):
     N0 = fn.shape[0]

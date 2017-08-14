@@ -3,59 +3,61 @@ import sys
 
 import fun_rad_ut as ru
 import fun_reconstruct as fr
-from constants import M_PROTON_G, ESU, C, V_PER_E, MARG
+from constants import M_PROTON_G, ESU, C, V_PER_E
 
+import matplotlib.pyplot as plt
 import numpy as np
 
-def magnetic_field(flux, rap, rs, ri, tot_prot, num_bins, Tkin):
+def magnetic_field(flux, flux_ref, rs, ri, bin_um, Tkin):
     '''
     The goal is to calculate the magnetic field per bin
 
     Parameters
     ----------
     flux (2D array): Number of protons per bin
-    rap (float): Aperature of the cone that is collimated to screen
-    rs (float): Lenght from implosion to screen
-    ri (float): Length from implosion to interaction region
-    tot_prot (float): Number of protons from the original capsule impolsion
-    num_bins (int): Float, size of the square edge lengths with which to divide the detector for binning
+    flux_ref (2D array): Number protons per bin without an interaction region
+    rs (float): Distance from the proton source to the detector, in cm
+    ri (float): Distance from the proton source to the interaction region, in cm
+    bin_um (float): Length of the side of a bin, in cm
     Tkin (float): Kinetic Energy
 
     Returns
     -------
     BrMag (2D array): B Field per bin
     '''
+    num_bins = flux_ref.shape[0] # num_bins x num_bins
     BrMag = np.zeros((num_bins,num_bins))
-    Br = fr.B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin)
+    # Reconstructed Magnetic Field
+    Br = fr.B_Recon(flux, flux_ref, rs, ri, bin_um, Tkin)
     for i in range(num_bins):
         for j in range(num_bins):
+            # Field Strength on a logarithmic scale
             BrMag = 0.5*math.log10(Br[i,j,0]**2 + Br[i,j,1]**2)
 
     return BrMag
 
 
-def BR_plot(flux, rap, rs, ri , tot_prot, num_bins, Tkin):
+def BR_plot(flux, flux_ref, rs, ri, bin_um, Tkin):
     '''
     Genereates the Log Reconstructed B perpendicular Projection
 
     Parameters
     ----------
     flux (2D array): Number of protons per bin
-    rs (float) : Lenght from implosion to screen
-    ri (float): Length from implosion to interaction region
-    rap (float): Aperature of the cone that is collimated to screen
-    tot_prot (float): Number of protons from the original capsule impolsion
-    num_bins (int): Float, size of the square edge lengths with which to divide the detector for binning
+    flux_ref (2D array): Number protons per bin without an interaction region
+    rs (float): Distance from the proton source to the detector, in cm
+    ri (float): Distance from the proton source to the interaction region, in cm
+    bin_um (float): Length of the side of a bin, in cm
     Tkin (float): Kinetic Energy
 
     Returns
     -------
-    B_Reconstructed.png
+    B_Reconstructed.png (image): Log Reconstructed B perpendicular Projection
     '''
     print (r"Constructing Reconstructed $B_\perp$ Projection Plot")
-    BR = fr.B_Recon(flux, rs, ri, rap, tot_prot, num_bins, Tkin)
-    BrMag = magnetic_field(flux, rs, ri, rap, tot_prot, num_bins, Tkin)
-    X,Y = ru.position(128)
+    BR = fr.B_Recon(flux, flux_ref, rs, ri, bin_um, Tkin)
+    BrMag = magnetic_field(flux, flux_ref, rs, ri, bin_um, Tkin)
+    X,Y = ru.position(flux_ref, bin_um, rs, ri)
     # Intiating Plot
     fig  = plt.figure()
     fig.set_figwidth(7.7)

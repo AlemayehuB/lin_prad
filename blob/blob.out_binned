@@ -1,0 +1,18 @@
+# Number of MPI ranks: 4
+# Field Configuration Type: pr_sum
+# Field Configuration Parameters: {'magfields': [<raytrace.pr_ellipsoidal object at 0x1a49490>, <raytrace.pr_ellipsoidal object at 0x1a490d0>]}
+# B0:  2.00000E+04 (Gauss)
+# li:  1.00000E-01 (cm)
+# Tkin:  1.47000E+01 (MeV)
+# Euler Angles: None
+# Jint: True
+# Bperpint: True
+#
+# rs:  1.00000E+02 (cm)
+# ri:  1.00000E+01 (cm)
+# raperture:  2.00000E-01 (cm)
+# rng_seed: 32344541
+# tol:  1.00000E-08
+# Initial step size (h0):  1.00000E-01
+# Max step size (hmax):  1.00000E-01
+#
