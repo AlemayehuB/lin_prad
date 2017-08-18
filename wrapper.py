@@ -1,30 +1,26 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import sys
 sys.path.append(r"/Users/asbogale/Documents/Work/FLASHLAB/pradreader")
 from pradreader import reader
 import fun_image as image
 import fun_Bplot2 as plot
 import fun_reconstruct as fr
-
-ri,rs,Ep_MeV,flux2D,flux2D_ref,bin_um = reader.reader(r"/Users/asbogale/Documents/Work/FLASHLAB/ALEMAYEHU/01 - 15 MeV/cshoc_ProtonDetectorFile01_2.201E-09","flash4")
-def wrapper(fn, rtype):
-    ri, rs, Ep_MeV, flux2D, flux2D_ref, bin_um = reader.reader(fn, rtype)
-    # Reconstruction Field Algorithm
-    recon.B_Recon(flux, flux_ref, rs, ri, bin_um, Tkin)
-
-    # Fluence Contrast Plot
-    image.fluct_plot(flux, flux_ref, rs, ri, bin_um, Tkin)
-
-    # Flux Plot
-    image.flux_plot(flux, flux_ref, rs, ri, bin_um)
-
-    # Genereates the Log Reconstructed B perpendicular Projection
-    plot.BR_plot(flux, flux_ref, rs, ri, bin_um, Tkin)
+import fun_rad_ut as ru
 
 
-#image.flux_plot(flux2D, bin_um)
-#image.fluct_plot(flux2D, flux2D_ref, rs, ri, bin_um)
-# fr.B_Recon(flux2D, flux2D_ref, rs, ri, bin_um, Ep_MeV)
+if __name__=='__main__':
+    # First Parameter: Path name of the file
+    # Second Parameter: The type of experimental output
+    s2r_cm,s2d_cm,Ep_MeV,flux,flux_ref,bin_um = reader.reader(r"%s" % sys.argv[1], "%s" % sys.argv[2])
 
-plot.BR_plot(flux2D, flux2D_ref, rs, ri, bin_um, Ep_MeV)
+    #Genereates the Fluence Contrast Plot, fluence_contrast.png
+    image.fluct_plot(flux, flux_ref, s2d_cm, s2r_cm, bin_um)
 
-#if __name__=='__main__':
+    # Generates the Flux Plot, flux.png
+    image.flux_plot(flux, bin_um)
+
+    # Genereates the Log Reconstructed B perpendicular Projection,b_recon.png
+    Br = fr.B_recon(flux, flux_ref, s2d_cm, s2r_cm, bin_um, Ep_MeV)
+    plot.BR_plot(Br, flux_ref, bin_um)

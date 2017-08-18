@@ -14,7 +14,7 @@ import numpy as np
 # Floor counts per bin
 Cmin = 10.0
 
-def fluct_plot(flux, flux_ref, rs, ri, bin_um):
+def fluct_plot(flux, flux_ref, s2d_cm, s2r_cm, bin_um):
     '''
     Genereates the a plot that shows the number of
     protons per bin
@@ -23,10 +23,9 @@ def fluct_plot(flux, flux_ref, rs, ri, bin_um):
     ----------
     flux (2D array): Number of protons per bin
     flux_ref (2D array): Number protons per bin without an interaction region
-    rs (float): Distance from the proton source to the detector, in cm
-    ri (float): Distance from the proton source to the interaction region, in cm
+    s2d_cm (float): Distance from the proton source to the detector, in cm
+    s2r_cm (float): Distance from the proton source to the interaction region, in cm
     bin_um (float): Length of the side of a bin, in cm
-    Tkin (float): Kinetic Energy
 
     Returns
     -------
@@ -39,7 +38,7 @@ def fluct_plot(flux, flux_ref, rs, ri, bin_um):
         'size': 32,
         }
 
-    Fluct =  fr.steady_state(flux, flux_ref, rs, ri)[1]
+    Fluct =  fr.steady_state(flux, flux_ref, s2d_cm, s2r_cm)[1]
     #print "Fluct:",Fluct
     x,y = ru.position(flux, bin_um)
     fig = plt.figure()
@@ -52,7 +51,7 @@ def fluct_plot(flux, flux_ref, rs, ri, bin_um):
     ax.set_xlabel("X (cm)", fontdict=font)
     plt.colorbar(p)
     ax.set_title("Fluence Contrast", fontdict=font)
-    fig.savefig("Fluence_Contrast.png", format='png')
+    fig.savefig("fluence_contrast.png", format='png')
 
 
 def flux_plot(flux,bin_um):
@@ -64,8 +63,8 @@ def flux_plot(flux,bin_um):
     ----------
     flux (2D array): Number of protons per bin
     flux_ref (2D array): Number protons per bin without an interaction region
-    rs (float): Distance from the proton source to the detector, in cm
-    ri (float): Distance from the proton source to the interaction region, in cm
+    s2d_cm (float): Distance from the proton source to the detector, in cm
+    s2r_cm (float): Distance from the proton source to the interaction region, in cm
     bin_um (float): Length of the side of a bin, in cm
 
     Returns
@@ -91,13 +90,4 @@ def flux_plot(flux,bin_um):
     ax.set_ylabel("Y (cm)",fontdict=font)
     plt.colorbar(p)
     ax.set_title("Counts/Bin",fontdict=font)
-    fig.savefig("Flux.png", format='png')
-
-# a = fr.flux_image(sys.argv[1],135)
-# flux_plot(a,650)
-# b = np.zeros((135,135))
-# for i in range(135):
-#     for j in range(135):
-#         b[i,j] = a.mean()
-#
-# fluct_plot(a, b, 100, 10, 650)
+    fig.savefig("flux.png", format='png')

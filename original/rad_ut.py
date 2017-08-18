@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from scipy.fftpack import fftn, ifftn
 import numpy as np
 import math
@@ -9,7 +12,7 @@ def idx2vec(idx):
     xx = -dmax + (idx[0]+0.5)*delta
     yy = -dmax + (idx[1]+0.5)*delta
     return np.array([xx,yy])
-    
+
 def vec2idx(vec):
     i = int((vec[0] + dmax)/delta)
     j = int((vec[1] + dmax)/delta)
@@ -38,10 +41,10 @@ def fconvolve(farr):
             a1 = 2.0*math.pi*i1/N0
             c1 = math.cos(a1)
             if i0 != 0 or i1 != 0:
-                q = 0.5 / (c0 + c1 - 2.0) 
-                buf[i0,i1] = farr[i0,i1] * q 
+                q = 0.5 / (c0 + c1 - 2.0)
+                buf[i0,i1] = farr[i0,i1] * q
     return buf
-    
+
 def solve_poisson(src):
     buf = fftn(src)
     buf = fconvolve(buf)
@@ -92,10 +95,9 @@ def bc_enforce_N(x, i, j):
     if i >= x.shape[0]: ii = x.shape[0]-1
     if j < 0 : jj = 0
     if j >= x.shape[1]: jj = x.shape[1]-1
-    
+
     return x[ii,jj]
 
 def bc_enforce_P(x, i, j):
-    
-    return x[i % x.shape[0], j % x.shape[1]]
 
+    return x[i % x.shape[0], j % x.shape[1]]

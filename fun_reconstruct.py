@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 '''
 Many of the variables are in reference to the paper,
 Inferring Morphology and Strength of Magnetic Fields From Proton Radiographs,
@@ -20,28 +23,28 @@ TOL_ITER = 1.0E-4
 MAX_ITER = 4000
 
 
-def b_field(rs, ri, Tkin):
+def b_field(s2r_cm, s2d_cm, Ep_MeV):
     '''
     Calculates the Uniform Magnetic field.
 
     Parameters
     ----------
-    rs (float): Distance from the proton source to the detector, in cm
-    ri (float): Distance from the proton source to the interaction region, in cm
-    Tkin (float): Kinetic energy
+    s2r_cm (float): Distance from the proton source to the detector, in cm
+    s2d_cm (float): Distance from the proton source to the interaction region, in cm
+    Ep_MeV (float): Kinetic energy
 
     Returns
     -------
     Bconst (float): Calculates the B, uniform magnetic field strength
     '''
-    v = math.sqrt(2 * (Tkin*V_PER_E) / M_PROTON_G) # Velocity of Proton
+    v = math.sqrt(2 * (Ep_MeV*V_PER_E) / M_PROTON_G) # Velocity of Proton
 
-    Bconst = M_PROTON_G * C * v / (ESU * (rs-ri)) # Uniform B Field Strength
+    Bconst = M_PROTON_G * C * v / (ESU * (s2r_cm-s2d_cm)) # Uniform B Field Strength
 
     return Bconst
 
 
-def steady_state(flux, flux_ref, rs, ri):
+def steady_state(flux, flux_ref, s2r_cm, s2d_cm):
     '''
     The goal is the obtain the steady-state diffusion Equation
 
@@ -49,8 +52,8 @@ def steady_state(flux, flux_ref, rs, ri):
     ----------
     flux (2D array): Number of protons per bin
     flux_ref (2D array): Number protons per bin without an interaction region
-    rs (float): Distance from the proton source to the detector, in cm
-    ri (float): Distance from the proton source to the interaction region, in cm
+    s2r_cm (float): Distance from the proton source to the detector, in cm
+    s2d_cm (float): Distance from the proton source to the interaction region, in cm
 
     Returns
     -------
@@ -99,7 +102,7 @@ def O(i, j, x, y):
     return a
 
 
-def B_Recon(flux, flux_ref, rs, ri, bin_um, Tkin):
+def B_recon(flux, flux_ref, s2r_cm, s2d_cm, bin_um, Ep_MeV):
     '''
     Produces a reconstructed magnetic field
 
@@ -107,30 +110,31 @@ def B_Recon(flux, flux_ref, rs, ri, bin_um, Tkin):
     ----------
     flux (2D array): Number of protons per bin
     flux_ref (2D array): Number protons per bin without an interaction region
-    rs (float): Distance from the proton source to the detector, in cm
-    ri (float): Distance from the proton source to the interaction region, in cm
+    s2r_cm (float): Distance from the proton source to the detector, in cm
+    s2d_cm (float): Distance from the proton source to the interaction region, in cm
     bin_um (float): Length of the side of a bin, in cm
-    Tkin (float): Kinetic Energy
+    Ep_MeV (float): Kinetic Energy
 
     Returns
     -------
-    B_R (2D array of (x,y)): Reconstructed Magnetic Field
+    Br (2D array of (x,y)): Reconstructed Magnetic Field
     '''
+
     ru.delta = bin_um
     num_bins = flux_ref.shape[0] # num_bins x num_bins
     # RHS of the Steady-State Diffusion Equation and Fluence Contrast
-    Src,Lam = steady_state(flux, flux_ref, rs, ri)
+    Src,Lam = steady_state(flux, flux_ref, s2r_cm, s2d_cm)
     # The real component after Lam is transformed then convolved and then inversely transformed
     phi = ru.solve_poisson(Lam)
     # Iterate to solution
     print "Gauss-Seidel Iteration..."
-    GS = ru.Gauss_Seidel(phi, np.exp(Lam), D, O, Src, talk=20, tol=TOL_ITER, maxiter=MAX_ITER)
+    GS = ru.Gauss_Seidel(phi, np.exp(Lam), D, O, Src, talk=20, tol=TOL_ITER, maxiter=4000)
     # Multiplying by the area of the bin
     phi *= (ru.delta**2)
     # Uniform B Field Strength
-    Bconst = b_field(rs, ri, Tkin)
+    Bconst = b_field(s2r_cm, s2d_cm, Ep_MeV)
     # Reconstructed perpendicular B Fields
-    B_R = np.zeros((num_bins, num_bins,2))
+    Br = np.zeros((num_bins, num_bins,2))
     # Lateral motion of proton
     deltaX = np.zeros((num_bins, num_bins,2))
 
@@ -138,50 +142,7 @@ def B_Recon(flux, flux_ref, rs, ri, bin_um, Tkin):
         for j in range(num_bins):
             #Reconstructed Data
             deltaX[i,j] = -ru.gradient(phi, (i,j))
-            B_R[i,j,0] = Bconst * deltaX[i,j,1]
-            B_R[i,j,1] = -Bconst * deltaX[i,j,0]
+            Br[i,j,0] = Bconst * deltaX[i,j,1]
+            Br[i,j,1] = -Bconst * deltaX[i,j,0]
 
-    return B_R
-
-def flux_image(filename, num_bins):
-    #Data file descriptor
-    data = open(filename, 'r')
-    plimit =- 1
-    line = data.readline()
-    while not match('# Columns:', line): #Sets the variables
-
-            if match('# Tkin:', line):
-                Tkin = float(line.split()[2]) #Kinetic energy
-
-            elif match('# rs:', line):
-                rs = float(line.split()[2]) # Length from implosion to screen
-
-            elif match('# ri:', line):
-                ri = float(line.split()[2]) # Length from implosion to interaction region
-
-            elif match('# raperture:', line):
-                rap = float(line.split()[2]) # aperture
-
-            line = data.readline()
-    # The loop reads each line of the input until the data is reached.
-    while match('#', line): line = data.readline()
-    # Pixel Counts
-    count = np.zeros((num_bins, num_bins))
-    rec_prot =  0
-    radius = rap * rs / ri  # radius of undeflected image of aperture at screen
-    ru.dmax = 0.98 * radius / math.sqrt(2.0)  # variable in rad_ut
-    ru.delta = 2.0 * ru.dmax / num_bins  # variable in rad_ut
-    while line:
-        rec_prot += 1
-        line = line.split()
-        x_loc = float(line[3]) # Final X location at screen (cm)
-        y_loc = float(line[4]) # Final Y location at screen (cm)
-        i,j = ru.vec2idx((x_loc,y_loc))
-
-        #The if-statement places values in the lists
-        if (x_loc + ru.dmax)/ru.delta >= 0 and i < num_bins and (y_loc + ru.dmax)/ru.delta >= 0 and j < num_bins:
-            count[i,j] += 1
-
-        if rec_prot == plimit: break
-        line = data.readline()
-    return count
+    return Br

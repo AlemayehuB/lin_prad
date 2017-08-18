@@ -1,3 +1,4 @@
+
 import math
 
 from constants import M_PROTON_G, ESU, C, V_PER_E
@@ -26,14 +27,15 @@ def position(flux_ref, bin_um):
     print "delta:",delta
     dmax = (delta * num_bins)/2.0
     print "dmax:",dmax
-    x = np.zeros((num_bins+1, num_bins+1))
-    y = np.zeros((num_bins+1, num_bins+1))
-    for i in range(num_bins+1):
-        for j in range(num_bins+1):
+    x = np.zeros((num_bins, num_bins))
+    y = np.zeros((num_bins, num_bins))
+    for i in range(num_bins):
+        for j in range(num_bins):
             xx = -dmax + i*delta
             yy = -dmax + j*delta
             x[i,j] = xx
             y[i,j] = yy
+
     return (x,y)
 
 def gradient(fn, idx):
