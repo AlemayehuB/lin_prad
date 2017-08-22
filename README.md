@@ -1,4 +1,4 @@
-### Linear Proton Radiography Reconstruction
+# Linear Proton Radiography Reconstruction
 
 Python package for reconstructing magnetic fields and analyzing proton deflection
 data
