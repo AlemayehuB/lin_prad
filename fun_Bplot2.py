@@ -58,8 +58,6 @@ def BR_plot(Br, flux_ref, bin_um):
     fig.set_figheight(6.0)
     # Reconstructed Magnetic Field Plot
     ax = fig.add_subplot(1,1,1)
-    # print "Br0:",Br[:,:,0].T,"\n"
-    # print "Br1:",Br[:,:,1].T,"\n"
     strm = ax.streamplot(X[:,0], Y[0,:], Br[:,:,0].T, Br[:,:,1].T, color=BrMag.T, \
                           linewidth=2, cmap=cm.RdYlGn, density=2.0, arrowsize=2.0)
     fig.colorbar(strm.lines)

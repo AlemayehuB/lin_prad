@@ -21,6 +21,8 @@ if __name__=='__main__':
     # Generates the Flux Plot, flux.png
     image.flux_plot(flux, bin_um)
 
-    # Genereates the Log Reconstructed B perpendicular Projection,b_recon.png
+    # Reconstructed Magnetic Field Alogrithm
     Br = fr.B_recon(flux, flux_ref, s2d_cm, s2r_cm, bin_um, Ep_MeV)
+
+    #  Genereates the Log Reconstructed B perpendicular Projection,B_recon.png
     plot.BR_plot(Br, flux_ref, bin_um)

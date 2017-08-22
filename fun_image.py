@@ -83,7 +83,6 @@ def flux_plot(flux,bin_um):
     fig.set_figheight(12.0)
     # Counts/Bin
     ax = fig.add_subplot(1,1,1)
-    #print "Flux:",flux
     p = ax.pcolormesh(x,y, flux, cmap=cm.afmhot, vmin=flux.min(),
                       vmax= flux.max())
     ax.set_xlabel("X (cm)",fontdict=font)
