@@ -1,3 +1,10 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+'''
+Provides tools to analyze the inputted data from a proton radiogtaphy experiment
+'''
+
 import math
 import sys
 
@@ -38,8 +45,7 @@ def fluct_plot(flux, flux_ref, s2d_cm, s2r_cm, bin_um):
         'size': 32,
         }
 
-    Fluct =  fr.steady_state(flux, flux_ref, s2d_cm, s2r_cm)[1]
-    #print "Fluct:",Fluct
+    Fluct =  fr.steady_state(flux, flux_ref)[1]
     x,y = ru.position(flux, bin_um)
     fig = plt.figure()
     fig.set_figwidth(26)

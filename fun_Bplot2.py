@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+Provides function that will plot the reconstructed magnetic field caluctlated from
+the alogrithm in recconstruct.py
+'''
+
 import math
 import sys
 

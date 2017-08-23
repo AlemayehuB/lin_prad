@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+'''
+Acts as a wrapper that links all the separtae modules in this project
+'''
 import sys
 sys.path.append(r"/Users/asbogale/Documents/Work/FLASHLAB/pradreader")
 from pradreader import reader
@@ -15,7 +18,7 @@ if __name__=='__main__':
     # Second Parameter: The type of experimental output
     s2r_cm,s2d_cm,Ep_MeV,flux,flux_ref,bin_um = reader.reader(r"%s" % sys.argv[1], "%s" % sys.argv[2])
 
-    #Genereates the Fluence Contrast Plot, fluence_contrast.png
+    # Genereates the Fluence Contrast Plot, fluence_contrast.png
     image.fluct_plot(flux, flux_ref, s2d_cm, s2r_cm, bin_um)
 
     # Generates the Flux Plot, flux.png

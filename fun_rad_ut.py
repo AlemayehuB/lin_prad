@@ -1,4 +1,10 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
+'''
+This module contains funcitons
+for caluclating purposes in the reconstruction alogorithm
+'''
 import math
 
 from constants import M_PROTON_G, ESU, C, V_PER_E
@@ -21,12 +27,8 @@ def vec2idx(vec):
 
 def position(flux_ref, bin_um):
     num_bins = flux_ref.shape[0]
-    print "num_bins:",num_bins
-    print bin_um
     delta = bin_um/10000.0
-    print "delta:",delta
     dmax = (delta * num_bins)/2.0
-    print "dmax:",dmax
     x = np.zeros((num_bins, num_bins))
     y = np.zeros((num_bins, num_bins))
     for i in range(num_bins):

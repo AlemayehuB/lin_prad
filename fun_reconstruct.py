@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Many of the variables are in reference to the paper,
+Many of the variables  and equations are in reference to the paper,
 Inferring Morphology and Strength of Magnetic Fields From Proton Radiographs,
 This script will reconstruct magnetic fields given the data
 from a Proton Radiography experiment.
@@ -39,12 +39,12 @@ def b_field(s2r_cm, s2d_cm, Ep_MeV):
     '''
     v = math.sqrt(2 * (Ep_MeV*V_PER_E) / M_PROTON_G) # Velocity of Proton
 
-    Bconst = M_PROTON_G * C * v / (ESU * (s2r_cm-s2d_cm)) # Uniform B Field Strength
+    Bconst = M_PROTON_G * C * v / (ESU * (s2r_cm - s2d_cm)) # Uniform B Field Strength
 
     return Bconst
 
 
-def steady_state(flux, flux_ref, s2r_cm, s2d_cm):
+def steady_state(flux, flux_ref):
     '''
     The goal is the obtain the steady-state diffusion Equation
 
@@ -62,7 +62,7 @@ def steady_state(flux, flux_ref, s2r_cm, s2d_cm):
     '''
     num_bins = flux_ref.shape[0] # num_bins x num_bins
     Lam = np.ones((num_bins,num_bins))
-    # Obtaining the fluence contrast
+    # Obtaining the fluence contrast from Equation 6
     Lam = np.divide(np.subtract(flux,flux_ref), flux_ref)
     # Obtaining the exponential fluence contrast
     ExpLam = np.exp(Lam)
@@ -117,7 +117,7 @@ def B_recon(flux, flux_ref, s2r_cm, s2d_cm, bin_um, Ep_MeV):
     ru.delta = bin_um
     num_bins = flux_ref.shape[0] # num_bins x num_bins
     # RHS of the Steady-State Diffusion Equation and Fluence Contrast
-    Src,Lam = steady_state(flux, flux_ref, s2r_cm, s2d_cm)
+    Src,Lam = steady_state(flux, flux_ref)
     # The real component after Lam is transformed then convolved and then inversely transformed
     phi = ru.solve_poisson(Lam)
     # Iterate to solution
