@@ -33,4 +33,7 @@ This module requires Python 2.7 or 3.5. The latest version can be installed with
 pip install git+https://github.com/AlemayehuB/lin_prad
 ```
 
+
 ### Documentation
+
+Full Documentation can be found here
