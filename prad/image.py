@@ -21,7 +21,7 @@ import numpy as np
 # Floor counts per bin
 Cmin = 10.0
 
-def fluct_plot(flux, flux_ref, s2d_cm, s2r_cm, bin_um):
+def fluct_plot(flux, flux_ref, bin_um):
     '''
     Genereates the a plot that shows the number of
     protons per bin
@@ -30,8 +30,6 @@ def fluct_plot(flux, flux_ref, s2d_cm, s2r_cm, bin_um):
     ----------
     flux (2D array): Number of protons per bin
     flux_ref (2D array): Number protons per bin without an interaction region
-    s2d_cm (float): Distance from the proton source to the detector, in cm
-    s2r_cm (float): Distance from the proton source to the interaction region, in cm
     bin_um (float): Length of the side of a bin, in cm
 
     Returns
@@ -45,14 +43,14 @@ def fluct_plot(flux, flux_ref, s2d_cm, s2r_cm, bin_um):
         'size': 32,
         }
 
-    Fluct =  fr.steady_state(flux, flux_ref)[1]
+    fluct =  fr.steady_state(flux, flux_ref)[1]
     x,y = ru.position(flux, bin_um)
     fig = plt.figure()
     fig.set_figwidth(26)
     fig.set_figheight(12.0)
     ax = fig.add_subplot(1,1,1)
-    p = ax.pcolormesh(x, y, Fluct, cmap = cm.afmhot,
-                        vmin = Fluct.min(), vmax = Fluct.max())
+    p = ax.pcolormesh(x, y, fluct, cmap = cm.afmhot,
+                        vmin = fluct.min(), vmax = fluct.max())
     ax.set_ylabel("Y (cm)", fontdict=font)
     ax.set_xlabel("X (cm)", fontdict=font)
     plt.colorbar(p)
@@ -68,9 +66,6 @@ def flux_plot(flux,bin_um):
     Parameters
     ----------
     flux (2D array): Number of protons per bin
-    flux_ref (2D array): Number protons per bin without an interaction region
-    s2d_cm (float): Distance from the proton source to the detector, in cm
-    s2r_cm (float): Distance from the proton source to the interaction region, in cm
     bin_um (float): Length of the side of a bin, in cm
 
     Returns
