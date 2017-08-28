@@ -8,8 +8,8 @@ Provides tools to analyze the inputted data from a proton radiogtaphy experiment
 import math
 import sys
 
-import fun_rad_ut as ru
-import fun_reconstruct as fr
+import rad_ut as ru
+import reconstruct as fr
 from constants import M_PROTON_G, ESU, C, V_PER_E
 
 
@@ -21,7 +21,7 @@ import numpy as np
 # Floor counts per bin
 Cmin = 10.0
 
-def fluct_plot(flux, flux_ref, bin_um):
+def fluct_plot(flux, flux_ref, bin_um, type):
     '''
     Genereates the a plot that shows the number of
     protons per bin
@@ -54,11 +54,17 @@ def fluct_plot(flux, flux_ref, bin_um):
     ax.set_ylabel("Y (cm)", fontdict=font)
     ax.set_xlabel("X (cm)", fontdict=font)
     plt.colorbar(p)
-    ax.set_title("Fluence Contrast", fontdict=font)
+    if type == 'carlo':
+        x = "Carlo"
+    elif type == 'flash4':
+        x = "Flash"
+    elif type == 'mitcsv':
+        x = 'MITCSV'
+    ax.set_title(x + ": Fluence Contrast", fontdict=font)
     fig.savefig("fluence_contrast.png", format='png')
 
 
-def flux_plot(flux,bin_um):
+def flux_plot(flux, bin_um, type):
     '''
     Genereates the a plot that shows the number of
     protons per bin
@@ -89,5 +95,11 @@ def flux_plot(flux,bin_um):
     ax.set_xlabel("X (cm)",fontdict=font)
     ax.set_ylabel("Y (cm)",fontdict=font)
     plt.colorbar(p)
-    ax.set_title("Counts/Bin",fontdict=font)
+    if type == 'carlo':
+        x = "Carlo"
+    elif type == 'flash4':
+        x = "Flash"
+    elif type == 'mitcsv':
+        x = 'MITCSV'
+    ax.set_title(x + ": Counts/Bin",fontdict=font)
     fig.savefig("flux.png", format='png')

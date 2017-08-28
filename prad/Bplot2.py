@@ -9,8 +9,8 @@ the alogrithm in recconstruct.py
 import math
 import sys
 
-import fun_rad_ut as ru
-import fun_reconstruct as fr
+import rad_ut as ru
+import reconstruct as fr
 from constants import M_PROTON_G, ESU, C, V_PER_E
 
 import matplotlib
@@ -40,7 +40,7 @@ def magnetic_field(Br):
     return BrMag
 
 
-def BR_plot(Br, flux_ref, bin_um):
+def BR_plot(Br, flux_ref, bin_um, type):
     '''
     Genereates the Log Reconstructed B perpendicular Projection
 
@@ -66,7 +66,13 @@ def BR_plot(Br, flux_ref, bin_um):
     strm = ax.streamplot(X[:,0], Y[0,:], Br[:,:,0].T, Br[:,:,1].T, color=BrMag.T, \
                           linewidth=2, cmap=cm.RdYlGn, density=2.0, arrowsize=2.0)
     fig.colorbar(strm.lines)
-    ax.set_title(r"Log Reconstructed $B_\perp$ Projection (G cm)", fontsize=18)
+    if type == 'carlo':
+        x = "Carlo"
+    elif type == 'flash4':
+        x = "Flash"
+    elif type == 'mitcsv':
+        x = 'MITCSV'
+    ax.set_title( x + r":Log Reconstructed $B_\perp$ Projection (G cm)", fontsize=18)
     ax.set_xlabel(r"X (cm)", fontsize=18)
     ax.set_ylabel(r"Y (cm)", fontsize=18)
     ax.tick_params(labelsize='large')

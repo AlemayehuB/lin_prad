@@ -11,7 +11,7 @@ import sys
 import math
 from re import match
 
-import fun_rad_ut as ru
+import rad_ut as ru
 from constants import M_PROTON_G, ESU, C, V_PER_E
 
 import numpy as np
