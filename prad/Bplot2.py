@@ -28,7 +28,7 @@ def magnetic_field(Br):
 
     Returns
     -------
-    BrMag (2D array): B Field per bin
+    BrMag (2D array): Log reconstructed B Field per bin
     '''
     num_bins = Br.shape[0] # num_bins x num_bins
     BrMag = np.zeros((num_bins,num_bins))
