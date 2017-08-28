@@ -1,0 +1,49 @@
+Metadata-Version: 1.0
+Name: lin-prad
+Version: 1.0.0
+Summary: Reconstruction Magnetic Field Tool
+Home-page: http://flash.uchicago.edu/
+Author: Carlo Graziani
+Author-email: carlooddjob.uchicago.edu
+License: MIT
+Description: # Linear Proton Radiography Reconstruction
+        
+        Python package for reconstructing magnetic fields and analyzing proton deflection
+        data
+        
+        ### Dependencies
+        
+        * numpy
+        * matplotlib
+        * scipy
+        * pradreader (https://github.com/jtlaune/pradreader)
+        
+        
+        They can be installed as follows:
+        
+        ```shell
+        pip install future
+        pip install numpy matplotlib scipy
+        pip install git+https://github.com/jtlaune/pradreader
+        ```
+        For OS X users, it is advised to use Anaconda Python to install `matplotlib` in order to avoid framework errors:
+        
+        ```shell
+        conda install matplotlib
+        ```
+        
+        
+        ### Installation
+        
+        This module requires Python 2.7 or 3.5. The latest version can be installed with
+        
+        ```shell
+        pip install git+https://github.com/AlemayehuB/lin_prad
+        ```
+        
+        
+        ### Documentation
+        
+        Full Documentation can be found here
+        
+Platform: UNKNOWN

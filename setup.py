@@ -10,7 +10,7 @@ if __name__ == "__main__":
           version='1.0.0',
           description='Reconstruction Magnetic Field Tool',
           long_description=open('README.md').read(),
-          license='MIT'
+          license='MIT',
           author='Carlo Graziani',
           author_email='carlooddjob.uchicago.edu',
           url='http://flash.uchicago.edu/',
