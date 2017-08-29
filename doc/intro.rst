@@ -1,11 +1,11 @@
 .. _introduction:
 
-lin_prad
+Linear Proton Radiography Reconstruction
 #########
 
 Python package for reconstructing magnetic fields and analyzing proton deflection data
 
-``Lin_prad``
+``Lin_prad`` is package 
 
 
 Dependencies
