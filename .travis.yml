@@ -30,7 +30,7 @@ install:
 
 # command to run tests
 script: 
-    - python -c "import opacplot2.tests as opt; opt.run_cli(coverage=True)"
+    - python -c "import lin_prad.tests as prad; prad.run_cli(coverage=True)"
 
 #after_success:
 #    coveralls
