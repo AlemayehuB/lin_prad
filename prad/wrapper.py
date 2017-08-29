@@ -12,12 +12,11 @@ import Bplot2 as plot
 import reconstruct as fr
 import rad_ut as ru
 
-
-if __name__=='__main__':
+def prad():
     # First Parameter: Path name of the file
     # Second Parameter: The type of experimental output
     s2r_cm,s2d_cm,Ep_MeV,flux,flux_ref,bin_um = reader.reader(r"%s" % sys.argv[1], "%s" % sys.argv[2])
-    print "WTF"
+
     # Genereates the Fluence Contrast Plot, fluence_contrast.png
     image.fluct_plot(flux, flux_ref, bin_um, sys.argv[2])
 
@@ -29,3 +28,6 @@ if __name__=='__main__':
 
     #  Genereates the Log Reconstructed B perpendicular Projection,B_recon.png
     plot.BR_plot(Br, flux_ref, bin_um, sys.argv[2])
+
+if __name__=='__main__':
+    prad()
