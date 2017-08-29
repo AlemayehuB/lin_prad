@@ -9,21 +9,21 @@ if __name__ == "__main__":
     setup(
           name="lin_prad",
           version='1.0.0',
-        
+
           description='Reconstruction Magnetic Field Tool',
-          long_description=open('README.md').read()
-        
+          long_description=open('README.md').read(),
+
           # Project Homepage
           url='http://flash.uchicago.edu/',
 
           # Author details
-          author='Carlo Graziani','Alemayehu Bogale'
-          author_email='carlo@oddjob.uchicago.edu', 'alemsolobog@uchicago.edu'
-        
+          author='Carlo Graziani and Alemayehu Bogale',
+          author_email='carlo@oddjob.uchicago.edu and alemsolobog@uchicago.edu',
+
           # License
           license='LICENSE.txt',
-    
-          # See https://pypi.python.org/pypi?%3Aaction=list_classifiers        
+
+          # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
           classifiers=[
             # How mature is this project? Common values are
             #   3 - Alpha
@@ -45,7 +45,7 @@ if __name__ == "__main__":
           ],
           # What does it project pertain to?
           keywords='proton radiography',
-        
+
           ppackages=find_packages(exclude=['contrib', 'docs', 'tests*']),
           install_requires=[
               "numpy >= 1.6",

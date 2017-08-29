@@ -1,6 +1,0 @@
-setup.py
-lin_prad.egg-info/PKG-INFO
-lin_prad.egg-info/SOURCES.txt
-lin_prad.egg-info/dependency_links.txt
-lin_prad.egg-info/requires.txt
-lin_prad.egg-info/top_level.txt
