@@ -201,7 +201,7 @@ fig  = plt.figure()
 fig.set_figwidth(18.0 * stretch)
 fig.set_figheight(12.0)
 ######################Radiography.png##########################################
-''' The plots 'fluence contrast', 'current projection function',
+ The plots 'fluence contrast', 'current projection function',
 'Fluence Contrast Difference/Noise','Counts/Bin','Predicted Counts/Bin',
 and 'Counts Difference/Noise' '''
 '''
@@ -226,7 +226,7 @@ ax = fig.add_subplot(2,3,3)
 p = ax.pcolormesh(x,y, Diff, cmap=cm.RdYlGn, vmax=vm, vmin=-vm)
 plt.colorbar(p)
 ax.set_title("Fluence Contrast Difference/Noise")
-'''
+
 # Counts/Bin
 ax = fig.add_subplot(1,1,1)
 p = ax.pcolormesh(x,y, count, cmap=cm.afmhot, vmin=count.min(),

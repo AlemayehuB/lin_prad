@@ -27,6 +27,7 @@ def vec2idx(vec):
 
 def position(flux_ref, bin_um):
     num_bins = flux_ref.shape[0]
+    print 'num_bins:', num_bins
     delta = bin_um/10000.0
     dmax = (delta * num_bins)/2.0
     x = np.zeros((num_bins, num_bins))
