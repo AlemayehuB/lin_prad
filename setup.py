@@ -53,7 +53,7 @@ if __name__ == "__main__":
               "scipy >= 0.19",
             ],
             entry_points={
-                      'console_scripts': ['reconstruct = prad.__main__:prad_wrap'],
+                      'console_scripts': ['reconstruct = lin_prad.__main__:prad_wrap'],
                      },
             include_package_data=True,
 
