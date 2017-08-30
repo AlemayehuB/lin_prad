@@ -1,5 +1,4 @@
-#!/bin/bash
-# -*- coding: utf-8 -*-
+
 
 '''
 Many of the variables  and equations are in reference to the paper,

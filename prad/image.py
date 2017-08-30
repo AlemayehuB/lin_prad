@@ -1,5 +1,4 @@
-#!/bin/bash
-# -*- coding: utf-8 -*-
+
 
 '''
 Provides tools to analyze the inputted data from a proton radiogtaphy experiment

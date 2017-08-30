@@ -1,5 +1,4 @@
-#!/bin/bash
-# -*- coding: utf-8 -*-
+
 
 '''
 Acts as a wrapper that links all the separtae modules in this project

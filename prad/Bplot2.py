@@ -1,5 +1,4 @@
-#!/bin/bash
-# -*- coding: utf-8 -*-
+
 
 '''
 Provides function that will plot the reconstructed magnetic field caluctlated from
