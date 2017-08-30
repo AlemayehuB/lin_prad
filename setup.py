@@ -17,8 +17,8 @@ if __name__ == "__main__":
             url='http://flash.uchicago.edu/',
 
             # Author details
-            author='Carlo Graziani and Alemayehu Bogale',
-            author_email='carlo@oddjob.uchicago.edu and alemsolobog@uchicago.edu',
+            author='Carlo Graziani',
+            author_email='carlo@oddjob.uchicago.edu',
 
             # License
             license='LICENSE.txt',
@@ -46,14 +46,14 @@ if __name__ == "__main__":
             # What does it project pertain to?
             keywords='proton radiography',
 
-            packages=find_packages(exclude=['docs', 'tests*']),
+            packages=find_packages(),
             install_requires=[
               "numpy >= 1.6",
               "matplotlib >= 2.0",
               "scipy >= 0.19",
             ],
             entry_points={
-                      'console_scripts': ['reconstruct = prad.wrapper:prad'],
+                      'console_scripts': ['reconstruct = prad.__main__:prad_wrap'],
                      },
             include_package_data=True,
 

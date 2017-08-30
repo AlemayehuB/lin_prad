@@ -1,5 +1,4 @@
 
-
 '''
 Provides tools to analyze the inputted data from a proton radiogtaphy experiment
 '''
@@ -94,7 +93,7 @@ def flux_plot(flux, bin_um, type):
     ax.set_xlabel("X (cm)",fontdict=font)
     ax.set_ylabel("Y (cm)",fontdict=font)
     plt.colorbar(p)
-    if type == 'carlo':
+    if type == 'carlo':s
         x = "Carlo"
     elif type == 'flash4':
         x = "Flash"

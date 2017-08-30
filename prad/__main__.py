@@ -23,7 +23,10 @@ def prad_wrap():
     image.flux_plot(flux, bin_um, sys.argv[2])
 
     # Reconstructed Magnetic Field Alogrithm
-    Br = fr.B_recon(flux, flux_ref, s2d_cm, s2r_cm, bin_um, Ep_MeV)
+    print "Calculating Reconstructed Magnetic Perpendicular Field"
+    tol_iter = float(raw_input(r"Desired Gauss-Seidel tolerance [default 1.0E-04]:  ") or 1.0E-04)
+    max_iter = int(raw_input(r"Desired number of Gauss-Seidel iterations [default 4000]:  ") or 4000)
+    Br = fr.B_recon(flux, flux_ref, s2d_cm, s2r_cm, bin_um, Ep_MeV, tol_iter, max_iter)
 
     #  Genereates the Log Reconstructed B perpendicular Projection,B_recon.png
     plot.BR_plot(Br, flux_ref, bin_um, sys.argv[2])

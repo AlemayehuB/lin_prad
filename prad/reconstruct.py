@@ -95,7 +95,7 @@ def O(i, j, x, y):
     return a
 
 
-def B_recon(flux, flux_ref, s2r_cm, s2d_cm, bin_um, Ep_MeV):
+def B_recon(flux, flux_ref, s2r_cm, s2d_cm, bin_um, Ep_MeV, tol_iter, max_iter):
     '''
     Produces a reconstructed magnetic field
 
@@ -121,7 +121,7 @@ def B_recon(flux, flux_ref, s2r_cm, s2d_cm, bin_um, Ep_MeV):
     phi = ru.solve_poisson(Lam)
     # Iterate to solution
     print "Gauss-Seidel Iteration..."
-    GS = ru.Gauss_Seidel(phi, np.exp(Lam), D, O, Src, talk=20, tol=TOL_ITER, maxiter=4000)
+    GS = ru.Gauss_Seidel(phi, np.exp(Lam), D, O, Src, talk=20, tol=tol_iter, maxiter= max_iter)
     # Multiplying by the area of the bin
     phi *= (ru.delta**2)
     # Uniform B Field Strength
@@ -133,7 +133,7 @@ def B_recon(flux, flux_ref, s2r_cm, s2d_cm, bin_um, Ep_MeV):
 
     for i in range(num_bins):
         for j in range(num_bins):
-            #Reconstructed Data
+            #Reconstructed Datam
             deltaX[i,j] = -ru.gradient(phi, (i,j))
             Br[i,j,0] = Bconst * deltaX[i,j,1]
             Br[i,j,1] = -Bconst * deltaX[i,j,0]
