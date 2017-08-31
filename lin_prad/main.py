@@ -4,7 +4,6 @@
 Acts as a wrapper that links all the separtae modules in this project
 '''
 import sys
-sys.path.append(r"/Users/asbogale/Documents/Work/FLASHLAB/pradreader")
 from pradreader import reader
 import image as image
 import Bplot2 as plot
@@ -12,6 +11,7 @@ import reconstruct as fr
 import rad_ut as ru
 
 def prad_wrap():
+    print "Starting reconstruction and analysis "
     # First Parameter: Path name of the file
     # Second Parameter: The type of experimental output
     s2r_cm,s2d_cm,Ep_MeV,flux,flux_ref,bin_um = reader.reader(r"%s" % sys.argv[1], "%s" % sys.argv[2])
@@ -31,5 +31,5 @@ def prad_wrap():
     #  Genereates the Log Reconstructed B perpendicular Projection,B_recon.png
     plot.BR_plot(Br, flux_ref, bin_um, sys.argv[2])
 
-if __name__=='__main__':
+if __name__=="__main__":
     prad_wrap()

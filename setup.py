@@ -1,61 +1,11 @@
-#!/usr/bin/env python
+from setuptools import setup
 
-import os
-
-from setuptools import setup, find_packages
-
-
-if __name__ == "__main__":
-    setup(
-            name="lin_prad",
-            version='1.0.0',
-
-            description='Reconstruction Magnetic Field Tool',
-            long_description=open('README.md').read(),
-
-            # Project Homepage
-            url='http://flash.uchicago.edu/',
-
-            # Author details
-            author='Carlo Graziani',
-            author_email='carlo@oddjob.uchicago.edu',
-
-            # License
-            license='LICENSE.txt',
-
-            # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
-            classifiers=[
-            # How mature is this project? Common values are
-            #   3 - Alpha
-            #   4 - Beta
-            #   5 - Production/Stable
-            'Development Status :: 3 - Alpha',
-
-            # Indicate who your project is intended for
-            'Intended Audience :: Science Research',
-            'Topic :: Scientific/Engineering :: Physics',
-
-            # Pick your license as you wish (should match "license" above)
-             'License :: OSI Approved :: MIT License',
-
-            # Specify the Python versions you support here. In particular, ensure
-            # that you indicate whether you support Python 2, Python 3 or both.
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 3',
-            ],
-            # What does it project pertain to?
-            keywords='proton radiography',
-
-            packages=find_packages(),
-            install_requires=[
-              "numpy >= 1.6",
-              "matplotlib >= 2.0",
-              "scipy >= 0.19",
-            ],
-            entry_points={
-                      'console_scripts': ['reconstruct = lin_prad.__main__:prad_wrap'],
-                     },
-            include_package_data=True,
-
-
-            )
+setup(name='lin-prad',
+      version='0.1.0',
+      packages=['lin_prad'],
+      entry_points={
+          'console_scripts': [
+              'reconstruct = lin_prad.main:prad_wrap'
+          ]
+      },
+      )

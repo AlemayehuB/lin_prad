@@ -1,0 +1,3 @@
+[console_scripts]
+reconstruct = lin_prad.main:prad_wrap
+

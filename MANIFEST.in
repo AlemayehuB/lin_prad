@@ -1,3 +1,2 @@
 include README.md
-recursive-include prad *.py
-recursive-include prad *.pyx
+recursive-include lin_prad *.py
