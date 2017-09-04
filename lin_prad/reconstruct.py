@@ -15,11 +15,6 @@ from constants import M_PROTON_G, ESU, C, V_PER_E
 
 import numpy as np
 
-# Gauss-Seidel iteration tolerance
-TOL_ITER = 1.0E-4
-
-# Maximum number of Gauss-Seidel iterations
-MAX_ITER = 4000
 
 
 def b_field(s2r_cm, s2d_cm, Ep_MeV):

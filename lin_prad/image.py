@@ -47,6 +47,9 @@ def fluct_plot(flux, flux_ref, bin_um, type):
     fig.set_figwidth(26)
     fig.set_figheight(12.0)
     ax = fig.add_subplot(1,1,1)
+    print x.shape
+    print y.shape
+    print fluct.shape
     p = ax.pcolormesh(x, y, fluct, cmap = cm.afmhot,
                         vmin = fluct.min(), vmax = fluct.max())
     ax.set_ylabel("Y (cm)", fontdict=font)

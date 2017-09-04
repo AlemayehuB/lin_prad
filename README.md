@@ -33,6 +33,28 @@ This module requires Python 2.7 or 3.5. The latest version can be installed with
 pip install git+https://github.com/AlemayehuB/lin_prad
 ```
 
+The module can also be installed by
+
+```shell
+git clone https://github.com/AlemayehuB/lin_prad
+cd lin_prad
+python setup.py install
+```
+
+# Reconstruct
+
+A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment
+
+Supported input file formats
+* Flash
+* mitcsv
+* carlo
+
+### Usage
+
+```shell
+reconstruct [input file] [file type]
+```
 
 ### Documentation
 

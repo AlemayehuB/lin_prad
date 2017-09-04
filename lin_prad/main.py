@@ -11,7 +11,7 @@ import reconstruct as fr
 import rad_ut as ru
 
 def prad_wrap():
-    print "Starting reconstruction and analysis "
+    print "STARTING RECONSTRUCTION and ANALYSIS.."
     # First Parameter: Path name of the file
     # Second Parameter: The type of experimental output
     s2r_cm,s2d_cm,Ep_MeV,flux,flux_ref,bin_um = reader.reader(r"%s" % sys.argv[1], "%s" % sys.argv[2])
