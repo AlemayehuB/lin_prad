@@ -26,15 +26,15 @@ def vec2idx(vec):
 
 def position(flux_ref, bin_um):
     num_bins = flux_ref.shape[0]
-    print 'num_bins:', num_bins
     delta = bin_um/10000.0
     dmax = (delta * num_bins)/2.0
-    x = np.zeros((num_bins+1, num_bins+1))
-    y = np.zeros((num_bins+1, num_bins+1))
-    for i in range(num_bins+1):
-        for j in range(num_bins+1):
-            xx = -dmax + i*delta
-            yy = -dmax + j*delta
+    print dmax
+    x = np.zeros((num_bins, num_bins))
+    y = np.zeros((num_bins, num_bins))
+    for i in range(num_bins):
+        for j in range(num_bins):
+            xx = -dmax + ((i + 0.5) * delta)
+            yy = -dmax + ((j + 0.5) * delta)
             x[i,j] = xx
             y[i,j] = yy
 
