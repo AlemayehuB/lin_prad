@@ -4,7 +4,6 @@
 Acts as a wrapper that runs the recons in this project
 '''
 import sys
-sys.path.append("/Users/asbogale/Documents/Work/FLASHLAB/pradreader")
 
 from pradreader import reader
 import Bplot2 as plot

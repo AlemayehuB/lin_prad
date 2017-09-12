@@ -5,7 +5,6 @@ setup(name='lin-prad',
       packages=['lin_prad'],
       entry_points={
           'console_scripts': ['reconstruct = lin_prad.main:prad_wrap',
-#                              'path-toosl = lin_prad.'
-                              ]
-      },
+                              'analysis = lin_prad.analysis:prad_wrap'],
+                },
       )
