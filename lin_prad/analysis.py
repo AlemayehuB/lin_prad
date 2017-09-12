@@ -44,7 +44,7 @@ def prad_wrap():
     print "Number of bins with zero protons: %d" % (flux.size - flux[ flux>0 ].size)
     print "Number of bins with %d or fewer protons: %d" % (flux_min, flux.size - flux[ flux>flux_min ].size)
 
-    if sys.argv[2] == "carlo"
+    if sys.argv[2] == "carlo":
         x = pd.read_csv(sys.argv[1], header=None,delim_whitespace=True, comment='#',usecols=[0])
         num_prot = len(x)
 
