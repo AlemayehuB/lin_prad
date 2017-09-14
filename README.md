@@ -55,11 +55,11 @@ Supported input file formats
 ```shell
 reconstruct [input file] [file type]
 ```
-### Output
+#### Output
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection such as:
-![alt text][logo]
-[logo]: https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png
+![B projection](/images/logo.png)
+Format: ![Alt Text](https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png)
 
 ## Documentation
 
