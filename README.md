@@ -58,7 +58,7 @@ reconstruct [input file] [file type]
 ### Output
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection such as:
-[logo]: https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png
+![logo]: https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png
 
 ### Documentation
 
