@@ -30,19 +30,19 @@ def prad_wrap():
     flux = flux.T
     flux_ref = flux_ref.T
 
-    # Fluence Distrubtion of protons at the screen 2D Histogram
-    Src, fluc = alog.steady_state(flux, flux_ref)
-    image.hist2D_plot(fluc, bin_um, sys.argv[2], "Fluence Contrast")
-    Flpos = fluc[flux >= flux_min]
-    print "Mean Fluct.: %12.5E ; Std. Dev. Fluct.: %12.5E" % (Flpos.mean(), Flpos.std())
-    print "Max Fluct: %12.5E ; Min Fluct: %12.5E" % (Flpos.max(), Flpos.min())
-
     # Protons per bin 2D Histogram
     image.hist2D_plot(flux, bin_um, sys.argv[2],"Counts per Bin")
     print "Mean counts per bin: %12.5E ; Std. Dev. Counts per bin: %12.5E" % (flux.mean(), flux.std())
     print "Max counts per bin: %d ; Min counts per bin: %d" % (flux.max(), flux.min())
     print "Number of bins with zero protons: %d" % (flux.size - flux[ flux>0 ].size)
     print "Number of bins with %d or fewer protons: %d" % (flux_min, flux.size - flux[ flux>flux_min ].size)
+
+    # Fluence Distrubtion of protons at the screen 2D Histogram
+    Src, fluc = alog.steady_state(flux, flux_ref)
+    image.hist2D_plot(fluc, bin_um, sys.argv[2], "Fluence Contrast")
+    Flpos = fluc[flux >= flux_min]
+    print "Mean Fluct.: %12.5E ; Std. Dev. Fluct.: %12.5E" % (Flpos.mean(), Flpos.std())
+    print "Max Fluct: %12.5E ; Min Fluct: %12.5E" % (Flpos.max(), Flpos.min())
 
     if sys.argv[2] == "carlo":
         x = pd.read_csv(sys.argv[1], header=None,delim_whitespace=True, comment='#',usecols=[0])

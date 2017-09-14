@@ -28,7 +28,6 @@ def position(flux_ref, bin_um):
     num_bins = flux_ref.shape[0]
     delta = bin_um/10000.0
     dmax = (delta * num_bins)/2.0
-    print dmax
     x = np.zeros((num_bins, num_bins))
     y = np.zeros((num_bins, num_bins))
     for i in range(num_bins):

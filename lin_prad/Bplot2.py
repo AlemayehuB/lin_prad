@@ -11,6 +11,7 @@ import sys
 import rad_ut as ru
 from constants import M_PROTON_G, ESU, C, V_PER_E
 
+from matplotlib.ticker import FixedLocator
 import matplotlib
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -63,23 +64,33 @@ def B_plot(B, flux_ref, bin_um, type, title):
     BMag = magnetic_field(B)
     X,Y = ru.position(flux_ref, bin_um)
     # Intiating Plot
+    stretch = 13.1/10.2
     fig = plt.figure()
-    fig.set_figwidth(26)
-    fig.set_figheight(12.0)
+    fig.set_figwidth(6.0 * stretch)
+    fig.set_figheight(6.0)
     # Reconstructed Magnetic Field Plot
     ax = fig.add_subplot(1,1,1)
     strm = ax.streamplot(X[:,0], Y[0,:], B[:,:,0].T, B[:,:,1].T, color=BMag.T, \
                           linewidth=2, cmap=cm.RdYlGn, density=2.0, arrowsize=2.0)
     fig.colorbar(strm.lines)
+
+    xmin = round(min(X[:,0]),1)
+    xmax = round(max(X[:,0]),1)
+    ymin = round(min(Y[0,:]),1)
+    ymax = round(max(Y[0,:]),1)
+
+    ax.set_xlim(int(xmin)- 0.5, int(xmax)+0.5)
+    ax.set_ylim(int(ymin)- 0.5, int(ymax)+0.5)
+    
     if type == 'carlo':
         x = "Carlo"
     elif type == 'flash4':
         x = "Flash"
     elif type == 'mitcsv':
         x = 'MITCSV'
-    ax.set_title( x + ": Log " + title + r" $B_\perp$ Projection (G cm)", fontsize=18)
-    ax.set_xlabel(r"X (cm)", fontdict=font)
-    ax.set_ylabel(r"Y (cm)", fontdict=font)
+
+    ax.set(title= x + ": Log " + title + r" $B_\perp$ Projection (G cm)",\
+            ylabel=r"Y (cm)", xlabel=r"X (cm)")
     ax.tick_params(labelsize='large')
 
     fig.savefig("B_" + title + ".png", format='png')

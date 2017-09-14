@@ -57,10 +57,12 @@ def steady_state(flux, flux_ref):
     num_bins = flux_ref.shape[0] # num_bins x num_bins
     Lam = np.ones((num_bins,num_bins))
     # Obtaining the fluence contrast from Equation 6
-    # for i in range(num_bins):
-    #     for j in range(num_bins):
-    #             Lam[i,j] = 2.0 * ( 1.0 - math.sqrt(flux_ref[i,j]/flux[i,j]) )
-    Lam = np.divide(np.subtract(flux,flux_ref), flux_ref)
+    for i in range(num_bins):
+        for j in range(num_bins):
+            if flux_ref[i,j] == 0:
+                Lam[i,j] = 0
+            else:
+                Lam[i,j] = (flux[i,j] - flux_ref[i,j]) / flux_ref[i,j]
     # Obtaining the exponential fluence contrast
     ExpLam = np.exp(Lam)
     # Source Term
