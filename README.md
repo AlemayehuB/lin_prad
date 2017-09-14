@@ -40,8 +40,8 @@ git clone https://github.com/AlemayehuB/lin_prad
 cd lin_prad
 python setup.py install
 ```
-
-## Reconstruct
+## Command Line Tools
+### Reconstruct
 
 A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment
 
@@ -50,7 +50,7 @@ Supported input file formats
 * mitcsv
 * carlo
 
-### Usage
+#### Usage
 
 ```shell
 reconstruct [input file] [file type]
@@ -61,6 +61,6 @@ The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection such 
 ![alt text][logo]
 [logo]: https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png
 
-### Documentation
+## Documentation
 
 Full Documentation can be found here
