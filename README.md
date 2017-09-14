@@ -3,7 +3,7 @@
 Python package for reconstructing magnetic fields and analyzing proton deflection
 data
 
-### Dependencies
+## Dependencies
 
 * numpy
 * matplotlib
@@ -25,7 +25,7 @@ conda install matplotlib
 ```
 
 
-### Installation
+## Installation
 
 This module requires Python 2.7 or 3.5. The latest version can be installed with
 
@@ -41,7 +41,7 @@ cd lin_prad
 python setup.py install
 ```
 
-# Reconstruct
+## Reconstruct
 
 A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment
 
@@ -55,6 +55,10 @@ Supported input file formats
 ```shell
 reconstruct [input file] [file type]
 ```
+### Output
+
+The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection such as:
+[logo]: https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png
 
 ### Documentation
 
