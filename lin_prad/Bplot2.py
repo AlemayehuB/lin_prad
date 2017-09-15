@@ -16,6 +16,7 @@ import matplotlib
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
+import re
 
 def magnetic_field(Br):
     '''
@@ -35,7 +36,6 @@ def magnetic_field(Br):
         for j in range(num_bins):
             # Field Strength on a logarithmic scale
             BrMag[i,j]= 0.5*math.log10(Br[i,j,0]**2 + Br[i,j,1]**2)
-
     return BrMag
 
 
@@ -61,18 +61,20 @@ def B_plot(B, flux_ref, bin_um, type, title):
         'weight': 'normal',
         'size': 32,
         }
-    BMag = magnetic_field(B)
     X,Y = ru.position(flux_ref, bin_um)
-    # Intiating Plot
+    BMag = magnetic_field(B)
     stretch = 13.1/10.2
-    fig = plt.figure()
+    #plt.rc('text', usetex=True)
+
+    #################################################
+    fig  = plt.figure()
     fig.set_figwidth(6.0 * stretch)
     fig.set_figheight(6.0)
-    # Reconstructed Magnetic Field Plot
     ax = fig.add_subplot(1,1,1)
     strm = ax.streamplot(X[:,0], Y[0,:], B[:,:,0].T, B[:,:,1].T, color=BMag.T, \
                           linewidth=2, cmap=cm.RdYlGn, density=2.0, arrowsize=2.0)
     fig.colorbar(strm.lines)
+    #################################################
 
     xmin = round(min(X[:,0]),1)
     xmax = round(max(X[:,0]),1)
@@ -81,7 +83,7 @@ def B_plot(B, flux_ref, bin_um, type, title):
 
     ax.set_xlim(int(xmin)- 0.5, int(xmax)+0.5)
     ax.set_ylim(int(ymin)- 0.5, int(ymax)+0.5)
-    
+
     if type == 'carlo':
         x = "Carlo"
     elif type == 'flash4':

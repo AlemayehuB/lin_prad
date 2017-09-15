@@ -75,10 +75,10 @@ def D(i, j, y):
     '''
     Supplemental function used during Gauss-Seidel Iteration
     '''
-    d = -2.0 * y[i,j] - 0.5 * ( ru.bc_enforce_N(y, i+1,j)
-          + ru.bc_enforce_N(y, i-1,j)
-          + ru.bc_enforce_N(y, i,j+1)
-          + ru.bc_enforce_N(y, i,j-1) )
+    d = -2.0 * y[i,j] - 0.5 * ( ru.bc_enforce_N(y, i+1,j) + \
+                                ru.bc_enforce_N(y, i-1,j) + \
+                                ru.bc_enforce_N(y, i,j+1) + \
+                                ru.bc_enforce_N(y, i,j-1) )
 
     return d
 
@@ -87,10 +87,10 @@ def O(i, j, x, y):
     '''
     Supplemental function used during Gauss-Seidel Iteration
     '''
-    a = 0.5 * ( ru.bc_enforce_D(x, i+1,j) * (ru.bc_enforce_N(y, i+1,j) + y[i,j])
-        + ru.bc_enforce_D(x, i-1,j) * (ru.bc_enforce_N(y, i-1,j) + y[i,j])
-        + ru.bc_enforce_D(x, i,j+1) * (ru.bc_enforce_N(y, i,j+1) + y[i,j])
-        + ru.bc_enforce_D(x, i,j-1) * (ru.bc_enforce_N(y, i,j-1) + y[i,j]))
+    a = 0.5 * (ru.bc_enforce_D(x, i+1,j) * (ru.bc_enforce_N(y, i+1,j) + y[i,j]) + \
+               ru.bc_enforce_D(x, i-1,j) * (ru.bc_enforce_N(y, i-1,j) + y[i,j]) + \
+               ru.bc_enforce_D(x, i,j+1) * (ru.bc_enforce_N(y, i,j+1) + y[i,j]) + \
+               ru.bc_enforce_D(x, i,j-1) * (ru.bc_enforce_N(y, i,j-1) + y[i,j]))
 
     return a
 
@@ -123,13 +123,13 @@ def B_recon(flux, flux_ref, Bperp, s2r_cm, s2d_cm, bin_um, Ep_MeV):
     Src,Lam = steady_state(flux, flux_ref)
     # The real component after Lam is transformed then convolved and then inversely transformed
     phi = ru.solve_poisson(Lam)
+    # Uniform B Field Strength
+    Bconst = b_field(s2r_cm, s2d_cm, Ep_MeV)
     # Iterate to solution
     print "Gauss-Seidel Iteration..."
     GS = ru.Gauss_Seidel(phi, np.exp(Lam), D, O, Src, talk=20, tol=tol_iter, maxiter= max_iter)
     # Multiplying by the area of the bin
     phi *= (ru.delta**2)
-    # Uniform B Field Strength
-    Bconst = b_field(s2r_cm, s2d_cm, Ep_MeV)
     # Reconstructed perpendicular B Fields
     BperpR = np.zeros((num_bins, num_bins,2))
     # True perpendicular B Fields
@@ -149,5 +149,10 @@ def B_recon(flux, flux_ref, Bperp, s2r_cm, s2d_cm, bin_um, Ep_MeV):
             idx = ru.vec2idx(x)
             BperpS[i,j,:] = Bperp[idx[0]%num_bins, idx[1]%num_bins, :]
 
-
+    # print deltaXR.max()
+    # print deltaXR.min()
+    # print deltaXR.mean()
+    # print BperpR.max()
+    # print BperpR.min()
+    # print BperpR.mean()
     return BperpR, BperpS
