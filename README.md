@@ -58,8 +58,11 @@ reconstruct [input file] [file type]
 #### Output
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection such as:
-![B projection](/images/logo.png)
-Format: ![Alt Text](https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png)
+![Alt Text](https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png)
+
+### Analysis
+
+A command line tool for analysis of a proton radiography experiment 
 
 ## Documentation
 
