@@ -57,12 +57,28 @@ reconstruct [input file] [file type]
 ```
 #### Output
 
-The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection such as:
-![Alt Text](https://github.com/AlemayehuB/lin_prad/blob/master/images/org_image/B_Reconstructed.png)
+The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
+
+If the file has a carlo type then Path Integrated Magnetci Field Projection  
 
 ### Analysis
 
-A command line tool for analysis of a proton radiography experiment 
+A command line tool for analysis of a proton radiography experiment
+
+Supported input file formats
+* Flash
+* mitcsv
+* carlo
+ 
+#### Usage
+```shell
+analysis [input file] [file type]
+```
+#### Output
+
+The tool outputs a Counts/Bin and fluence contrast plot 
+
+If the file has a carlo type then there is also current projection, predicted Counts/Bin, and Noise for both Counts/Bin and fluence contrast plot
 
 ## Documentation
 
