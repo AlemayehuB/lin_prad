@@ -59,7 +59,7 @@ reconstruct [input file] [file type]
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
-*If the file has a carlo type then Path Integrated Magnetci Field Projection  
+*If the file has a **carlo** type then **Path Integrated Magnetci Field Projection**
 
 ### Analysis
 
@@ -78,7 +78,7 @@ analysis [input file] [file type]
 
 The tool outputs a Counts/Bin and fluence contrast plot 
 
-*If the file has a carlo type then there is also current projection, predicted Counts/Bin, and Noise for both Counts/Bin and fluence contrast plot
+*If the file has a **carlo** type then there is also ***current projection, predicted Counts/Bin, and Noise for both Counts/Bin and fluence contrast plot**
 
 ## Documentation
 
