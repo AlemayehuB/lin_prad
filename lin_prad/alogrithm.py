@@ -46,8 +46,6 @@ def steady_state(flux, flux_ref):
     ----------
     flux (2D array): Number of protons per bin
     flux_ref (2D array): Number protons per bin without an interaction region
-    s2r_cm (float): Distance from the proton source to the detector, in cm
-    s2d_cm (float): Distance from the proton source to the interaction region, in cm
 
     Returns
     -------
@@ -55,14 +53,11 @@ def steady_state(flux, flux_ref):
     Src (2D array): Source term from multiplying the fluence contrast and exp(fluence contrast)
     '''
     num_bins = flux_ref.shape[0] # num_bins x num_bins
-    Lam = np.ones((num_bins,num_bins))
+
     # Obtaining the fluence contrast from Equation 6
-    for i in range(num_bins):
-        for j in range(num_bins):
-            if flux_ref[i,j] == 0:
-                Lam[i,j] = 0
-            else:
-                Lam[i,j] = (flux[i,j] - flux_ref[i,j]) / flux_ref[i,j]
+    Lam = np.divide(np.subtract(flux, flux_ref), flux_ref)
+    #Lam = np.multiply(2.0 ,np.subtract(1.0,np.sqrt(np.divide(flux_ref,flux))))
+
     # Obtaining the exponential fluence contrast
     ExpLam = np.exp(Lam)
     # Source Term
@@ -149,10 +144,5 @@ def B_recon(flux, flux_ref, Bperp, s2r_cm, s2d_cm, bin_um, Ep_MeV):
             idx = ru.vec2idx(x)
             BperpS[i,j,:] = Bperp[idx[0]%num_bins, idx[1]%num_bins, :]
 
-    # print deltaXR.max()
-    # print deltaXR.min()
-    # print deltaXR.mean()
-    # print BperpR.max()
-    # print BperpR.min()
-    # print BperpR.mean()
+    print "#L2 norm of residual = %12.5E ;  Number of Gauss-Seidel iterations = %d\n" % GS
     return BperpR, BperpS
