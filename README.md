@@ -78,7 +78,7 @@ analysis [input file] [file type]
 
 The tool outputs a Counts/Bin and fluence contrast plot 
 
-* If the file has a **carlo** type then there is also **current projection, predicted Counts/Bin, and Noise for both Counts/Bin and fluence contrast plot**
+* If the file has a **carlo** type then there is also **Current Projection**, **Predicted Counts/Bin**, and **Noise** for both Counts/Bin and fluence contrast plot.
 
 ## Documentation
 
