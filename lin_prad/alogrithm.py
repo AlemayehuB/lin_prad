@@ -8,11 +8,12 @@ from a Proton Radiography experiment.
 '''
 import sys
 import math
-from re import match
+
 
 import rad_ut as ru
 from constants import M_PROTON_G, ESU, C, V_PER_E
 
+from re import match
 import numpy as np
 
 
@@ -55,8 +56,8 @@ def steady_state(flux, flux_ref):
     num_bins = flux_ref.shape[0] # num_bins x num_bins
 
     # Obtaining the fluence contrast from Equation 6
-    Lam = np.divide(np.subtract(flux, flux_ref), flux_ref)
-    #Lam = np.multiply(2.0 ,np.subtract(1.0,np.sqrt(np.divide(flux_ref,flux))))
+    #Lam = np.divide(np.subtract(flux, flux_ref), flux_ref)
+    Lam = np.multiply(2.0 ,np.subtract(1.0,np.sqrt(np.divide(flux_ref,flux))))
 
     # Obtaining the exponential fluence contrast
     ExpLam = np.exp(Lam)
@@ -90,7 +91,7 @@ def O(i, j, x, y):
     return a
 
 
-def B_recon(flux, flux_ref, Bperp, s2r_cm, s2d_cm, bin_um, Ep_MeV):
+def B_recon(flux, flux_ref, Bperp, s2r_cm, s2d_cm, bin_um, Ep_MeV, tol_iter, max_iter):
     '''
     Produces a reconstructed magnetic field
 
@@ -108,9 +109,6 @@ def B_recon(flux, flux_ref, Bperp, s2r_cm, s2d_cm, bin_um, Ep_MeV):
     BperpR (2D array of (x,y)): Reconstructed Magnetic Field
     BperpS (2D array of (x,y)): True Magnetic Field
     '''
-    tol_iter = float(raw_input(r"Desired Gauss-Seidel tolerance [default 1.0E-04]:  ") or 1.0E-04)
-    max_iter = int(raw_input(r"Desired number of Gauss-Seidel iterations [default 4000]:  ") or 4000)
-
     ru.delta = bin_um/10000.0
 
     num_bins = flux_ref.shape[0] # num_bins x num_bins

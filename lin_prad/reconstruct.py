@@ -13,6 +13,39 @@ import path
 import image
 
 import  numpy as np
+import argparse as ap
+
+def get_input_data():
+    '''
+    Command line options and variables
+    '''
+    avail_input_formats = ['carlo', 'flash4', 'mitcsv']
+    parser = ap.ArgumentParser(
+                description="This script is used to reconstruct the magnetic field of "
+                             "Proton Radiography experiment")
+    parser.add_argument("-v", "--verbose", help="increase output verbosity",
+                    action="store_true")
+    parser.add_argument("filename", type=str,
+                help="The filename including the path")
+    parser.add_argument("filetype", type=str,
+                help="The file format",choices=avail_input_formats)
+    parser.add_argument("bin_um", type=float,
+                help="Length of the side of a bin, in cm")
+    parser.add_argument("--tol", default=1.0E-04, type=float,
+                help="The Gauss-Seidel tolerance. DEFAULT:1.0E-04")
+    parser.add_argument("--iter", default=4000, type=int,
+                help="The number of Gauss-Seidel iterations. DEFAULT:4000")
+
+    args = parser.parse_args()
+
+    # if args.tol is None:
+    #     args.tol = 1.0E-04
+    #
+    # if args.iter is None:
+    #     args.tol = 4000
+
+    return args
+
 def L2(bin_um, s2r_cm, s2d_cm, BperpR, BperpS):
     '''
     Determines the relative L2 between two arrays
@@ -53,7 +86,14 @@ def prad_wrap():
     files (string): png file that contains the reconstructed and/or path integrated
                     magnetic field plot
     '''
-
+    # Input variables and options
+    args = get_input_data()
+    fn = args.filename
+    ft = args.filetype
+    bin_um = args.bin_um
+    tol = args.tol
+    max_iter= args.iter 
+    #############################
     print "STARTING RECONSTRUCTION AND PLOTTING..."
     s2r_cm,s2d_cm,Ep_MeV,flux,flux_ref,bin_um = reader.reader(sys.argv[1],sys.argv[2])
     flux = flux.T
