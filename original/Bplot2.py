@@ -50,7 +50,7 @@ while line:
 
     Br[i,j,0] = float(line.split()[6]) # Bx(Reconstructed)
     Br[i,j,1] = float(line.split()[7]) # By(Reconstructed)
-    BrMag[i,j] = 0.5*math.log10(Br[i,j,0]**2 + Br[i,j,1]**2) # B field(Reconstructed)
+    BrMag[i,j] = 0.5*math.log10(Bi[i,j,0]**2 + Bi[i,j,1]**2) # B field(Reconstructed)
 
 
     line = fd.readline()
