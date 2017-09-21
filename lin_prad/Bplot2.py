@@ -7,6 +7,7 @@ the alogrithm in recconstruct.py
 
 import math
 import sys
+import os.path
 
 import rad_ut as ru
 from constants import M_PROTON_G, ESU, C, V_PER_E

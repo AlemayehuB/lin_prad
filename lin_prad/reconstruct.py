@@ -4,6 +4,7 @@
 Acts as a wrapper that runs the recons in this project
 '''
 import sys
+import os.path
 
 from pradreader import reader
 import Bplot2 as plot
@@ -37,12 +38,6 @@ def get_input_data():
                 help="The number of Gauss-Seidel iterations. DEFAULT:4000")
 
     args = parser.parse_args()
-
-    # if args.tol is None:
-    #     args.tol = 1.0E-04
-    #
-    # if args.iter is None:
-    #     args.tol = 4000
 
     return args
 
@@ -89,29 +84,32 @@ def prad_wrap():
     # Input variables and options
     args = get_input_data()
     fn = args.filename
-    ft = args.filetype
+    rtype = args.filetype
     bin_um = args.bin_um
-    tol = args.tol
-    max_iter= args.iter 
+    tol_iter = args.tol
+    max_iter= args.iter
     #############################
     print "STARTING RECONSTRUCTION AND PLOTTING..."
-    s2r_cm,s2d_cm,Ep_MeV,flux,flux_ref,bin_um = reader.reader(sys.argv[1],sys.argv[2])
+    fname = reader.reader(fn, rtype, 0, 0, 0, 0, bin_um)
+    flux,flux_ref,s2r_cm,s2d_cm,Ep_MeV,bin_um = path.parse_im(fname)
     flux = flux.T
     flux_ref = flux_ref.T
 
     # Magnetic Field Alogrithm
     print "Calculating Magnetic Perpendicular Field..."
     Bperp = np.zeros((flux.shape[0],flux.shape[0],2))
-    if sys.argv[2] == "carlo":
-        Bperp, J, avg_fluence, im_fluence = path.mag_parse(r"%s" % sys.argv[1], bin_um)
 
-    BperpR,BperpS = alog.B_recon(flux, flux_ref, Bperp, s2d_cm, s2r_cm, bin_um, Ep_MeV)
+    if rtype == "carlo":
+        Bperp, J, avg_fluence, im_fluence = path.mag_parse(fn, bin_um)
+
+    BperpR,BperpS = alog.B_recon(flux, flux_ref, Bperp, s2d_cm, s2r_cm, bin_um, Ep_MeV, tol_iter, max_iter)
+
     #  Genereates the Log Reconstructed B perpendicular Projection,B_recon.png
-    plot.B_plot(BperpR, flux_ref, bin_um, sys.argv[2],"Reconstructed")
+    plot.B_plot(BperpR, flux_ref, bin_um, rtype,"Reconstructed")
 
     # Genereates the Log True B perpendicular Projection,B_true.png
     if sys.argv[2] == "carlo":
-        plot.B_plot(BperpS, flux_ref, bin_um, sys.argv[2], "True")
+        plot.B_plot(BperpS, flux_ref, bin_um, rtype, "True")
 
         #Relative L2 between Reconstructed and Path integrated magnetic field
         L2(bin_um, s2r_cm, s2d_cm, BperpR, BperpS)
