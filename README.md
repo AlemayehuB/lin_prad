@@ -51,15 +51,20 @@ Supported input file formats
 * carlo
 
 #### Usage
-
 ```shell
-reconstruct [input file] [file type]
+reconstruct [options] [input file] [file type] [bin length(microns)]
 ```
+##### Options
+| Option | Action |
+|:-------|--------|
+|--tol| The Gauss-Seidel tolerance. DEFAULT:1.0E-04 |
+|--iter| The number of Gauss-Seidel iterations. DEFAULT:4000|
+
 #### Output
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
-* If the file has a **carlo** type then **Path Integrated Magnetci Field Projection**
+* If the file has a **carlo** file type then **Path Integrated Magnetci Field Projection**
 
 ### Analysis
 
@@ -78,7 +83,7 @@ analysis [input file] [file type]
 
 The tool outputs a Counts/Bin and fluence contrast plot 
 
-* If the file has a **carlo** type then there is also **Current Projection**, **Predicted Counts/Bin**, and **Noise** for both Counts/Bin and fluence contrast plot.
+* If the file has a **carlo** file type then there is also **Current Projection**, **Predicted Counts/Bin**, and **Noise** for both Counts/Bin and fluence contrast plot.
 
 ## Documentation
 
