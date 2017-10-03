@@ -51,15 +51,26 @@ Supported input file formats
 * carlo
 
 #### Usage
-
 ```shell
-reconstruct [input file] [file type]
+reconstruct [options] [input file] [file type] [bin length(microns)]
 ```
+##### Options
+
+| Option | Action |
+|:-------|--------|
+|--tol| The Gauss-Seidel tolerance. DEFAULT:1.0E-04 |
+|--iter| The number of Gauss-Seidel iterations. DEFAULT:4000| 
+
+#### Example 
+```shell
+reconstuct --tol 1.0E-05 --iter 8000 myfile.txt flash4 320
+```
+This command line script ensures that Gauss-Seidel Tolerance is 1.0E-05 and the number of Gauss-Seidel Iterations 8000 and parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
 #### Output
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
-* If the file has a **carlo** type then **Path Integrated Magnetci Field Projection**
+* If the file has a **carlo** file type then **Path Integrated Magnetci Field Projection**
 
 ### Analysis
 
@@ -74,11 +85,16 @@ Supported input file formats
 ```shell
 analysis [input file] [file type]
 ```
+#### Example
+```shell
+analysis myfile.txt mitcsv
+```
+This command line parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
 #### Output
 
 The tool outputs a Counts/Bin and fluence contrast plot 
 
-* If the file has a **carlo** type then there is also **Current Projection**, **Predicted Counts/Bin**, and **Noise** for both Counts/Bin and fluence contrast plot.
+* If the file has a **carlo** file type then there is also **Current Projection**, **Predicted Counts/Bin**, and **Noise** for both Counts/Bin and fluence contrast plot.
 
 ## Documentation
 
