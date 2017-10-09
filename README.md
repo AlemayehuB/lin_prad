@@ -1,7 +1,7 @@
 # Linear Proton Radiography Reconstruction
 
 Python package for reconstructing magnetic fields and analyzing proton deflection
-data
+data based on proton radiographyflux image
 
 ## Dependencies
 
@@ -40,6 +40,16 @@ git clone https://github.com/AlemayehuB/lin_prad
 cd lin_prad
 python setup.py install
 ```
+## Requirements
+
+An intermediate file that contains the variables such as:
+* Distance from proton source to the interaction region(cm), s2r_cm
+* Distance from proton source to the screen(cm), s2d_cm 
+* Proton Kinetic Energies (MeV), Ep_MeV
+* flux image which is a matrix with number of protons per bin of the screen which is dependent on the inputted bin length, flux
+* flux reference which is the flux image if there were no interaction region
+
+
 ## Command Line Tools
 ### Reconstruct
 
