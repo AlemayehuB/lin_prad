@@ -1,10 +1,10 @@
-[comment]: <> (It's a very good start to documentation for release! I have a few comments and we'll iterate. -Scott)
+> It's a very good start to documentation for release! I have a few comments and we'll iterate. -Scott
 
 # Linear Proton Radiography Reconstruction
 
-[comment]: <> (A longer description here would be helpful! One or two paragraphs.)
-[comment]: <> (Describe what the use of this package is; e.g., taking a radiograph and reconstructing magnetic field map.)
-[comment]: <> (Cite Carlo's paper as the basis for this code: https://arxiv.org/abs/1603.08617)
+> A longer description here would be helpful! One or two paragraphs.
+> Describe what the use of this package is; e.g., taking a radiograph and reconstructing magnetic field map.
+> Cite Carlo's paper as the basis for this code: https://arxiv.org/abs/1603.08617
 
 Python package for reconstructing magnetic fields and analyzing proton deflection
 data based on proton radiographyflux image
@@ -48,7 +48,7 @@ cd lin_prad
 python setup.py install
 ```
 ## Requirements
-[comment]: <> (This description should clarify that pradreader makes the file below.)
+> This description should clarify that pradreader makes the file below.
 
 An intermediate file that contains the variables such as:
 * Distance from proton source to the interaction region(cm), s2r_cm
@@ -63,12 +63,14 @@ An intermediate file that contains the variables such as:
 
 A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment
 
-[comment]: <> (Does THIS code support these file formats, or does pradreader? Maybe we could to say something like: "Supported file formats include any that pradreader supports, including radiographs generated from FLASH simulations and MIT's CR39 proton radiography analysis")
+> Does THIS code support these file formats, or does pradreader? Maybe we could to say something like: "Supported file formats include any that pradreader supports, including radiographs generated from FLASH simulations and MIT's CR39 proton radiography analysis"
+
 Supported input file formats
 * Flash
 * mitcsv
 * carlo
-[comment]: <> (Outsiders don't know what a "carlo" file type is, nor a "mitcsv"; these names were made up for internal use in pradreader)
+
+> Outsiders don't know what a "carlo" file type is, nor a "mitcsv"; these names were made up for internal use in pradreader
 
 #### Usage
 ```shell
@@ -79,8 +81,10 @@ reconstruct [options] [input file] [file type] [bin length(microns)]
 | Option | Action |
 |:-------|--------|
 |--tol| The Gauss-Seidel tolerance. DEFAULT:1.0E-04 |
-|--iter| The number of Gauss-Seidel iterations. DEFAULT:4000| 
-[comment]: <> (What do these do? Why would I change these values? What happens if I don't set them? Add a qualitative description of how to use these values (e.g. "Modifying the Gauss-Seidel tolerance changes the threshold for convergence; increasing may speed up convergence but result in lower quality", and cite the section of Carlo's paper that tells them more.)
+|--iter| The number of Gauss-Seidel iterations. DEFAULT:4000|
+
+
+> What do these do? Why would I change these values? What happens if I don't set them? Add a qualitative description of how to use these values (e.g. "Modifying the Gauss-Seidel tolerance changes the threshold for convergence; increasing may speed up convergence but result in lower quality", and cite the section of Carlo's paper that tells them more.
 
 #### Example 
 ```shell
@@ -92,18 +96,18 @@ This command line script ensures that Gauss-Seidel Tolerance is 1.0E-05 and the 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
 * If the file has a **carlo** file type then **Path Integrated Magnetic Field Projection**
-[comment]: <> (What does this mean?)
+> What does this mean?
 
 ### Analysis
 
 A command line tool for analysis of a proton radiography experiment
-[comment]: <> (Again, more description here. Why would an outsider want to use this?)
+> Again, more description here. Why would an outsider want to use this?
 
 Supported input file formats
 * Flash
 * mitcsv
 * carlo
- [comment]: <> (Same comments as in the other file format section above)
+> Same comments as in the other file format section above
 
 #### Usage
 ```shell
