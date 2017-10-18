@@ -11,7 +11,7 @@ data based on proton radiographyflux image
 
 ## Dependencies
 
-OS X users: Prior to installing dependencies, ensure a fresh Python installation by following [this guide](https://matplotlib.org/faq/installing_faq.html#osx-notes).
+OS X users: Prior to installing dependencies, ensure an adequate Python installation (non-Apple) by following [this guide](https://matplotlib.org/faq/installing_faq.html#osx-notes).
 
 The following Python packages are required:
 * numpy (Scientific computing)
