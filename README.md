@@ -10,8 +10,9 @@ Python package for reconstructing magnetic fields and analyzing proton deflectio
 data based on proton radiographyflux image
 
 ## Dependencies
+This module requires **Python 2.7** or **3.5**. Installation requires **git**.
 
-OS X users: Prior to installing dependencies, ensure an adequate Python installation (non-Apple) by following [this guide](https://matplotlib.org/faq/installing_faq.html#osx-notes).
+**OS X users:** Prior to installing dependencies, ensure an adequate Python installation (non-Apple) by following [this guide](https://matplotlib.org/faq/installing_faq.html#osx-notes).
 
 The following Python packages are required:
 * numpy (Scientific computing)
@@ -28,11 +29,10 @@ pip install numpy matplotlib scipy
 pip install git+https://github.com/jtlaune/pradreader
 ```
 
+Depending on how Python was installed on your system, `pip` may require Administrative or `sudo` privileges.
+
 ## Installation
-
-Note: This module requires Python 2.7 or 3.5.
-
-After installing dependencies, install the latest version of this module by:
+After installing dependencies, install the latest version of **lin_prad** by:
 
 ```shell
 pip install git+https://github.com/AlemayehuB/lin_prad
