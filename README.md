@@ -1,4 +1,5 @@
 > It's a very good start to documentation for release! I have a few comments and we'll iterate. -Scott
+> Maybe the user guide should be on [readthedocs](https://readthedocs.org/) instead?
 
 # Linear Proton Radiography Reconstruction
 
@@ -8,6 +9,8 @@
 
 Python package for reconstructing magnetic fields and analyzing proton deflection
 data based on proton radiographyflux image
+
+# Setup
 
 ## Dependencies
 This module requires **Python 2.7** or **3.5**. Installation requires **git**.
@@ -29,10 +32,10 @@ pip install numpy matplotlib scipy
 pip install git+https://github.com/jtlaune/pradreader
 ```
 
-Depending on how Python was installed on your system, `pip` may require Administrative or `sudo` privileges.
+Depending on how Python was installed on your system, `pip` may require *Administrative* or `sudo` privileges.
 
 ## Installation
-After installing dependencies, install the latest version of **lin_prad** by:
+Once all dependencies are satisfied, install the latest version of **lin_prad** by:
 
 ```shell
 pip install git+https://github.com/AlemayehuB/lin_prad
@@ -45,6 +48,8 @@ git clone https://github.com/AlemayehuB/lin_prad
 cd lin_prad
 python setup.py install
 ```
+
+# Usage
 ## Requirements
 > This description should clarify that pradreader makes the file below.
 
@@ -57,7 +62,7 @@ An intermediate file that contains the variables such as:
 
 
 ## Command Line Tools
-### Reconstruct
+### Tool 1: "reconstruct"
 
 A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment
 
@@ -70,11 +75,11 @@ Supported input file formats
 
 > Outsiders don't know what a "carlo" file type is, nor a "mitcsv"; these names were made up for internal use in pradreader
 
-#### Usage
+#### "reconstruct:" Usage
 ```shell
 reconstruct [options] [input file] [file type] [bin length(microns)]
 ```
-##### Options
+##### "reconstruct:" Options
 
 | Option | Action |
 |:-------|--------|
@@ -84,19 +89,19 @@ reconstruct [options] [input file] [file type] [bin length(microns)]
 
 > What do these do? Why would I change these values? What happens if I don't set them? Add a qualitative description of how to use these values (e.g. "Modifying the Gauss-Seidel tolerance changes the threshold for convergence; increasing may speed up convergence but result in lower quality", and cite the section of Carlo's paper that tells them more.
 
-#### Example 
+#### "reconstruct:" Example 
 ```shell
 reconstuct --tol 1.0E-05 --iter 8000 myfile.txt flash4 320
 ```
 This command line script ensures that Gauss-Seidel Tolerance is 1.0E-05 and the number of Gauss-Seidel Iterations 8000 and parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
-#### Output
+#### "reconstruct:" Output
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
 * If the file has a **carlo** file type then **Path Integrated Magnetic Field Projection**
 > What does this mean?
 
-### Analysis
+### Tool 2: "analysis"
 
 A command line tool for analysis of a proton radiography experiment
 > Again, more description here. Why would an outsider want to use this?
@@ -107,19 +112,25 @@ Supported input file formats
 * carlo
 > Same comments as in the other file format section above
 
-#### Usage
+#### "analysis": Usage
 ```shell
 analysis [input file] [file type]
 ```
-#### Example
+#### "analysis": Example
 ```shell
 analysis myfile.txt mitcsv
 ```
 This command line parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
-#### Output
+#### "analysis": Output
 
 The tool outputs a Counts/Bin and fluence contrast plot 
 
 * If the file has a **carlo** file type then there is also **Current Projection**, **Predicted Counts/Bin**, and **Noise** for both Counts/Bin and fluence contrast plot.
 
 
+# Updating/Uninstalling
+> Write up how to update a current installation (and how to update dependencies as well), how to uninstall it
+
+To update **lin_prad** at a later date, ...
+
+To uninstall **lin_prad**, ...
