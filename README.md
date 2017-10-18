@@ -11,23 +11,21 @@ data based on proton radiographyflux image
 
 ## Dependencies
 
-* numpy
-* matplotlib
-* scipy
-* pradreader (https://github.com/jtlaune/pradreader)
+OS X users: Prior to installing dependencies, ensure a fresh Python installation by following [this guide](https://matplotlib.org/faq/installing_faq.html#osx-notes).
 
+The following Python packages are required:
+* numpy (Scientific computing)
+* matplotlib (Plotting)
+* scipy (Scientific computing)
+* future (Cross-compatibility between Python2 and Python3)
+* pradreader (https://github.com/jtlaune/pradreader) (Reading various proton radiograph file formats)
 
-They can be installed as follows:
+On most systems (see above note for OS X), they can be installed using Python's [PIP package manager](https://packaging.python.org/tutorials/installing-packages/) as follows:
 
 ```shell
 pip install future
 pip install numpy matplotlib scipy
 pip install git+https://github.com/jtlaune/pradreader
-```
-For OS X users, it is advised to use Anaconda Python to install `matplotlib` in order to avoid framework errors:
-
-```shell
-conda install matplotlib
 ```
 
 ## Installation
