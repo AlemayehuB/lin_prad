@@ -22,14 +22,13 @@ The following Python packages are required:
 * numpy (Scientific computing)
 * scipy (Scientific computing)
 * matplotlib (Plotting)
-* python-tk (Plotting)
 * pradreader (https://github.com/jtlaune/pradreader) (Reading various proton radiograph file formats)
 
 On most systems (see above note for OS X), they can be installed using Python's [PIP package manager](https://packaging.python.org/tutorials/installing-packages/) as follows:
 
 ```shell
 pip install future
-pip install numpy scipy matplotlib python-tk
+pip install numpy scipy matplotlib
 pip install git+https://github.com/jtlaune/pradreader
 ```
 

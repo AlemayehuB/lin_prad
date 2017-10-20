@@ -12,8 +12,9 @@ import os.path
 import rad_ut as ru
 from constants import M_PROTON_G, ESU, C, V_PER_E
 
-from matplotlib.ticker import FixedLocator
 import matplotlib
+matplotlib.use('Agg') # Headless plotting (avoids python-tk GUI requirement)
+from matplotlib.ticker import FixedLocator
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
