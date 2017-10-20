@@ -18,17 +18,18 @@ This module requires **Python 2.7** or **3.5**. Installation requires **git**.
 **OS X users:** Prior to installing dependencies, ensure an adequate Python installation (non-Apple) by following [this guide](https://matplotlib.org/faq/installing_faq.html#osx-notes).
 
 The following Python packages are required:
-* numpy (Scientific computing)
-* matplotlib (Plotting)
-* scipy (Scientific computing)
 * future (Cross-compatibility between Python2 and Python3)
+* numpy (Scientific computing)
+* scipy (Scientific computing)
+* matplotlib (Plotting)
+* python-tk (Plotting)
 * pradreader (https://github.com/jtlaune/pradreader) (Reading various proton radiograph file formats)
 
 On most systems (see above note for OS X), they can be installed using Python's [PIP package manager](https://packaging.python.org/tutorials/installing-packages/) as follows:
 
 ```shell
 pip install future
-pip install numpy matplotlib scipy
+pip install numpy scipy matplotlib python-tk
 pip install git+https://github.com/jtlaune/pradreader
 ```
 
