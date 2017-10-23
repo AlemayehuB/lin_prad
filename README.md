@@ -51,7 +51,7 @@ python setup.py install
 
 # Usage
 ## Requirements
-> This description should clarify that pradreader makes the file below.
+An intermediate file is created using the [pradreader python package](https://github.com/jtlaune/pradreader).
 
 An intermediate file that contains the variables such as:
 * Distance from proton source to the interaction region(cm), s2r_cm
@@ -62,19 +62,11 @@ An intermediate file that contains the variables such as:
 
 
 ## Command Line Tools
+
+Supported file formats include any that pradreader supports, including radiographs generated from FLASH simulations and MIT's CR39 proton radiography analysis
 ### Tool 1: "reconstruct"
 
 A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment
-
-> Does THIS code support these file formats, or does pradreader? Maybe we could to say something like: "Supported file formats include any that pradreader supports, including radiographs generated from FLASH simulations and MIT's CR39 proton radiography analysis"
-
-Supported input file formats
-* Flash
-* mitcsv
-* carlo
-
-> Outsiders don't know what a "carlo" file type is, nor a "mitcsv"; these names were made up for internal use in pradreader
-
 #### "reconstruct:" Usage
 ```shell
 reconstruct [options] [input file] [file type] [bin length(microns)]
@@ -86,8 +78,11 @@ reconstruct [options] [input file] [file type] [bin length(microns)]
 |--tol| The Gauss-Seidel tolerance. DEFAULT:1.0E-04 |
 |--iter| The number of Gauss-Seidel iterations. DEFAULT:4000|
 
+The number of Gauss-Seidel iterations: This number represents the number of iterations that in the Gauss-Seidel method. Changing this number may affect the results if it hasn't reached converegence.
 
-> What do these do? Why would I change these values? What happens if I don't set them? Add a qualitative description of how to use these values (e.g. "Modifying the Gauss-Seidel tolerance changes the threshold for convergence; increasing may speed up convergence but result in lower quality", and cite the section of Carlo's paper that tells them more.
+The Gauss-Seidel tolerance: This number represents  limit  and a resudial value that is calculated every iteration. If the resudial value reaches this limit the Gauss-Seidel method should stop.
+
+For more info check out pages 8 and 9: https://arxiv.org/abs/1603.08617
 
 #### "reconstruct:" Example 
 ```shell
@@ -105,12 +100,6 @@ The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
 A command line tool for analysis of a proton radiography experiment
 > Again, more description here. Why would an outsider want to use this?
-
-Supported input file formats
-* Flash
-* mitcsv
-* carlo
-> Same comments as in the other file format section above
 
 #### "analysis": Usage
 ```shell
