@@ -78,9 +78,9 @@ reconstruct [options] [input file] [file type] [bin length(microns)]
 |--tol| The Gauss-Seidel tolerance. DEFAULT:1.0E-04 |
 |--iter| The number of Gauss-Seidel iterations. DEFAULT:4000|
 
-The number of Gauss-Seidel iterations: This number represents the number of iterations that in the Gauss-Seidel method. Changing this number may affect the results if it hasn't reached converegence.
+**The number of Gauss-Seidel iterations**: This number represents the number of iterations that in the Gauss-Seidel method. Changing this number may affect the results if it hasn't reached converegence.
 
-The Gauss-Seidel tolerance: This number represents  limit  and a resudial value that is calculated every iteration. If the resudial value reaches this limit the Gauss-Seidel method should stop.
+**The Gauss-Seidel tolerance**: This number represents  limit  and a resudial value that is calculated every iteration. If the resudial value reaches this limit the Gauss-Seidel method should stop.
 
 For more info check out pages 8 and 9: https://arxiv.org/abs/1603.08617
 
