@@ -102,7 +102,7 @@ A command line tool for analysis of a proton radiography experiment. Analysis is
 
 #### Usage
 ```shell
-analysis [input file] [file type]
+analysis [input file] [file type] [bin length(microns)]
 ```
 #### Example
 ```shell
