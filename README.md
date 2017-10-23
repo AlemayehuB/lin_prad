@@ -66,12 +66,12 @@ An intermediate file that contains the variables such as:
 Supported file formats include any that pradreader supports, including radiographs generated from FLASH simulations and MIT's CR39 proton radiography analysis
 ### Tool 1: "reconstruct"
 
-A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment
-#### "reconstruct:" Usage
+A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment given an intermediate file with the requirements above. It outputs streamplots based on the reconstruction algorithim  
+#### Usage
 ```shell
 reconstruct [options] [input file] [file type] [bin length(microns)]
 ```
-##### "reconstruct:" Options
+##### Options
 
 | Option | Action |
 |:-------|--------|
@@ -84,12 +84,12 @@ reconstruct [options] [input file] [file type] [bin length(microns)]
 
 For more info check out pages 8 and 9: https://arxiv.org/abs/1603.08617
 
-#### "reconstruct:" Example 
+#### Example 
 ```shell
 reconstuct --tol 1.0E-05 --iter 8000 myfile.txt flash4 320
 ```
 This command line script ensures that Gauss-Seidel Tolerance is 1.0E-05 and the number of Gauss-Seidel Iterations 8000 and parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
-#### "reconstruct:" Output
+#### Output
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
@@ -98,19 +98,18 @@ The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
 ### Tool 2: "analysis"
 
-A command line tool for analysis of a proton radiography experiment
-> Again, more description here. Why would an outsider want to use this?
+A command line tool for analysis of a proton radiography experiment. Analysis is done by plotting a 2D matrices each value is considered a pixel on the graph and the number of pixels is determinded by the bin size that the user inputs. The 2D matrices are the flux and fluence(fluence distribution of protons) plot. 
 
-#### "analysis": Usage
+#### Usage
 ```shell
 analysis [input file] [file type]
 ```
-#### "analysis": Example
+#### Example
 ```shell
 analysis myfile.txt mitcsv
 ```
 This command line parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
-#### "analysis": Output
+#### Output
 
 The tool outputs a Counts/Bin and fluence contrast plot 
 
