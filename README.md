@@ -107,7 +107,7 @@ analysis [input file] [file type] [bin length(microns)]
 ```
 #### Example
 ```shell
-analysis myfile.txt mitcsv 400
+analysis myfile.txt flash4 400
 ```
 This command line parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
 #### Output
