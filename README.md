@@ -3,12 +3,10 @@
 
 # Linear Proton Radiography Reconstruction
 
-> A longer description here would be helpful! One or two paragraphs.
-> Describe what the use of this package is; e.g., taking a radiograph and reconstructing magnetic field map.
-> Cite Carlo's paper as the basis for this code: https://arxiv.org/abs/1603.08617
+Proton radiography is an experimental technique used to reveal the magnetic fields found in high-energy density plasma experiments using beams of protons. The proton beams are either produced by imploding capsules, which release a short pulse of mono-energetic protons at stagnation, or by thermally produced protons accelerated through extreme electric field gradients. The usual proton energies are between 3 and 30MeV and are driven through a magnetic field in a plasma experiment, where the path is shifted by the Lorentz force and then come to stop at the screen. The positions on the screen are recorded along with initial conditions. Under certain experimental conditions, the full structure of the perpendicular magnetic field can be reconstructed by solving a steady- state inhomogeneous two-dimensional diffusion equation. The code presented is a Python package developed at the University of Chicago to analyze proton radiography experimental radiographs in the linear (small-image contrast) regime. This code is based on work by Graziani et al. 2017 (under review).
 
-Python package for reconstructing magnetic fields and analyzing proton deflection
-data based on proton radiographyflux image
+Original paper may be found below:
+https://arxiv.org/abs/1603.08617
 
 # Setup
 
