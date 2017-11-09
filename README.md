@@ -91,8 +91,6 @@ This command line script ensures that Gauss-Seidel Tolerance is 1.0E-05 and the 
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
 
-* If the file has a **carlo** file type then **Path Integrated Magnetic Field Projection**
-> What does this mean?
 
 ### Tool 2: "analysis"
 
@@ -110,9 +108,6 @@ This command line parses myfile.txt that has a file type of flash4 and a bin len
 #### Output
 
 The tool outputs a Counts/Bin and fluence contrast plot 
-
-* If the file has a **carlo** file type then there is also **Current Projection**, **Predicted Counts/Bin**, and **Noise** for both Counts/Bin and fluence contrast plot.
-
 
 # Updating/Uninstalling
 > Write up how to update a current installation (and how to update dependencies as well), how to uninstall it
