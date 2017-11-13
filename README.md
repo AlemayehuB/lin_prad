@@ -1,9 +1,6 @@
-> It's a very good start to documentation for release! I have a few comments and we'll iterate. -Scott
-> Maybe the user guide should be on [readthedocs](https://readthedocs.org/) instead?
-
 # Linear Proton Radiography Reconstruction
 
-Proton radiography is an experimental technique used to reveal the magnetic fields found in high-energy density plasma experiments using beams of protons. The proton beams are either produced by imploding capsules, which release a short pulse of mono-energetic protons at stagnation, or by thermally produced protons accelerated through extreme electric field gradients. The usual proton energies are between 3 and 30MeV and are driven through a magnetic field in a plasma experiment, where the path is shifted by the Lorentz force and then come to stop at the screen. The positions on the screen are recorded along with initial conditions. Under certain experimental conditions, the full structure of the perpendicular magnetic field can be reconstructed by solving a steady- state inhomogeneous two-dimensional diffusion equation. The code presented is a Python package developed at the University of Chicago to analyze proton radiography experimental radiographs in the linear (small-image contrast) regime. This code is based on work by Graziani et al. 2017 (under review).
+Proton radiography is an experimental technique used to reveal the magnetic fields found in high-energy density plasma experiments using beams of protons. The proton beams are either produced by imploding capsules, which release a short pulse of mono-energetic protons at stagnation, or by thermally produced protons accelerated through extreme electric field gradients. The usual proton energies are between 3 and 30MeV and are driven through a magnetic field in a plasma experiment, where the path is shifted by the Lorentz force and then come to stop at the screen. The positions on the screen are recorded along with initial conditions. Under certain experimental conditions, the full structure of the perpendicular magnetic field can be reconstructed by solving a steady- state inhomogeneous two-dimensional diffusion equation. The code presented is a Python package developed at the University of Chicago to analyze proton radiography experimental radiographs in the linear (small-image contrast) regime. This code is based on work by Graziani et al. 2017 (in press).
 
 Original paper may be found [here](https://arxiv.org/abs/1603.08617)
 
@@ -112,6 +109,9 @@ The tool outputs a Counts/Bin and fluence contrast plot
 # Updating/Uninstalling
 > Write up how to update a current installation (and how to update dependencies as well), how to uninstall it
 
-To update **lin_prad** at a later date, ...
+To update **PRaLine** at a later date, ...
 
-To uninstall **lin_prad**, ...
+To uninstall **PRaLine**
+```shell
+pip uninstall PRaLine
+```
