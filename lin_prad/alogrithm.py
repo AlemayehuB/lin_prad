@@ -47,7 +47,8 @@ def steady_state(flux, flux_ref):
     ----------
     flux (2D array): Number of protons per bin
     flux_ref (2D array): Number protons per bin without an interaction region
-
+    type (int): if 1 Lam is calcuated using taylor expansion if not Lam is
+                calcuated using the equation specified in the paper
     Returns
     -------
     Lam (2D array): fluence contrast
@@ -56,9 +57,18 @@ def steady_state(flux, flux_ref):
     num_bins = flux_ref.shape[0]  # num_bins x num_bins
 
     # Obtaining the fluence contrast from Equation 6
-    #Lam = np.divide(np.subtract(flux, flux_ref), flux_ref)
-    Lam = np.multiply(2.0, np.subtract(
-        1.0, np.sqrt(np.divide(flux_ref, flux))))
+    #Lam = np.multiply(2.0, np.subtract(1.0, np.sqrt(np.divide(flux_ref, flux))))
+    Lam = np.zeros((num_bins, num_bins), dtype=np.float64)
+    for i in range(num_bins):
+        for j in range(num_bins):
+
+            if (flux_ref[i, j] == 0):
+                Lam[i, j] == 0
+            else:
+                # Equation in Paper
+                Lam[i, j] = (flux[i, j] - flux_ref[i, j]) / (flux_ref[i, j])
+                # Taylor expansion
+                #Lam[i,j] = 2.0 * ( 1.0 - math.sqrt(flux_ref[i,j]/flux[i,j]))
 
     # Obtaining the exponential fluence contrast
     ExpLam = np.exp(Lam)

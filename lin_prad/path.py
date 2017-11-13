@@ -79,9 +79,6 @@ def mag_parse(fname, bin_um):
 
     fd.close()
 
-    print "Min, max, mean pixel counts, and delta:"
-    print flux.min(), flux.max(), flux.mean(), ru.delta
-
     avg_fluence = nprot / (math.pi * radius**2)
     im_fluence = flux.sum() / (4 * ru.dmax**2)
 
@@ -126,6 +123,7 @@ def parse_im(fname):
 
     data = pd.read_csv(fname, header=None, comment='#',
                        delimiter=",").as_matrix()
+
     index = int(data.shape[1] / 3)
     num_bins = int(math.sqrt(index))
 

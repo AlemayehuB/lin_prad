@@ -12,8 +12,8 @@ import os.path
 import rad_ut as ru
 from constants import M_PROTON_G, ESU, C, V_PER_E
 
-import matplotlib
-matplotlib.use('Agg') # Headless plotting (avoids python-tk GUI requirement)
+import matplotlib as mpl
+mpl.use('Agg') # Headless plotting (avoids python-tk GUI requirement)
 from matplotlib.ticker import FixedLocator
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -74,8 +74,17 @@ def B_plot(B, flux_ref, bin_um, type, title):
     fig.set_figwidth(6.0 * stretch)
     fig.set_figheight(6.0)
     ax = fig.add_subplot(1, 1, 1)
+    vmin = np.amin(BMag.T)
+    print("vmin: " +vmin)
+    vmax = (np.amax(BMag.T))
+    print("vmax: " +vmax)
+    norm = mpl.colors.Normalize(vmin= vmin,vmax= vmax)
+
+    #tick_loc = np.around(np.linspace(vmin, vmax,12), decimals = 2)
+    #print tick_loc
+
     strm = ax.streamplot(X[:, 0], Y[0, :], B[:, :, 0].T, B[:, :, 1].T, color=BMag.T,
-                         linewidth=2, cmap=cm.RdYlGn, density=2.0, arrowsize=2.0)
+                         linewidth=2, cmap=cm.RdYlGn, density=2.0, arrowsize=2.0, norm = norm)
     fig.colorbar(strm.lines)
     #################################################
 

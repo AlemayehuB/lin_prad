@@ -29,7 +29,7 @@ def get_input_data():
     parser.add_argument("input_file", type=str,
                         help="The filename including the path")
     parser.add_argument("type", type=str,
-                        help="Input filetype.", choices=avail_input_formats)
+                        help="Input filetype", choices=avail_input_formats)
     parser.add_argument("bin_um", type=float,
                         help="Length of the side of a bin, in microns")
     parser.add_argument("--tol", default=1.0E-04, type=float,
