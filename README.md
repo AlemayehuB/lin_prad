@@ -2,14 +2,14 @@
 
 Proton radiography is an experimental technique used to reveal the magnetic fields found in high-energy density plasma experiments using beams of protons. The proton beams are either produced by imploding capsules, which release a short pulse of mono-energetic protons at stagnation, or by thermally produced protons accelerated through extreme electric field gradients. The usual proton energies are between 3 and 30MeV and are driven through a magnetic field in a plasma experiment, where the path is shifted by the Lorentz force and then come to stop at the screen. The positions on the screen are recorded along with initial conditions. Under certain experimental conditions, the full structure of the perpendicular magnetic field can be reconstructed by solving a steady- state inhomogeneous two-dimensional diffusion equation. The code presented is a Python package developed at the University of Chicago to analyze proton radiography experimental radiographs in the linear (small-image contrast) regime. This code is based on work by Graziani et al. 2017 (in press).
 
-Original paper may be found [here](https://arxiv.org/abs/1603.08617)
+The Graziani et al. 2017 paper upon which this code is based may be found [here](https://arxiv.org/abs/1603.08617).
 
 # Setup
 
 ## Dependencies
 This module requires **Python 2.7** or **3.5**. Installation requires **git**.
 
-**OS X users:** Prior to installing dependencies, ensure an adequate Python installation (non-Apple) by following [this guide](https://matplotlib.org/faq/installing_faq.html#osx-notes).
+**OS X users:** Prior to installing dependencies, ensure an adequate Python installation by following [this guide](https://matplotlib.org/faq/installing_faq.html#osx-notes). The Python that ships with OS X may not work well with some required dependencies.
 
 The following Python packages are required:
 * future (Cross-compatibility between Python2 and Python3)
@@ -23,7 +23,7 @@ On most systems (see above note for OS X), they can be installed using Python's 
 
 ```shell
 pip install future
-pip install numpy scipy matplotlib
+pip install numpy scipy matplotlib pandas
 pip install git+https://github.com/jtlaune/pradreader
 ```
 
