@@ -59,12 +59,12 @@ An intermediate file that contains the variables such as:
 ## Command Line Tools
 
 Supported file formats include any that pradreader supports, including radiographs generated from FLASH simulations and MIT's CR39 proton radiography analysis
-### Tool 1: "reconstruct"
+### Tool 1: "lin-reconstruct"
 
 A command line tool for reconstructing the magnetic field of the data from a proton radiography experiment given an intermediate file with the requirements above. It outputs streamplots based on the reconstruction algorithim  
 #### Usage
 ```shell
-reconstruct [options] [input file] [file type] [bin length(microns)]
+lin-reconstruct [options] [input file] [file type] [bin length(microns)]
 ```
 ##### Options
 
@@ -81,30 +81,39 @@ For more info check out pages 8 and 9: https://arxiv.org/abs/1603.08617
 
 #### Example 
 ```shell
-reconstuct --tol 1.0E-05 --iter 8000 myfile.txt flash4 320
+lin-reconstuct --tol 1.0E-05 --iter 8000 myfile.txt flash4 320
 ```
 This command line script ensures that Gauss-Seidel Tolerance is 1.0E-05 and the number of Gauss-Seidel Iterations 8000 and parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
 #### Output
 
 The tool outputs Log Reconstructed Perpendicular Magnetic Field Projection
+<p align="center">
+<img src="examples/B_Reconstructed.png" width="500">
+</p>
 
 
-### Tool 2: "analysis"
+### Tool 2: "lin-analyze"
 
 A command line tool for analysis of a proton radiography experiment. Analysis is done by plotting a 2D matrices each value is considered a pixel on the graph and the number of pixels is determinded by the bin size that the user inputs. The 2D matrices are the flux and fluence(fluence distribution of protons) plot. 
 
 #### Usage
 ```shell
-analysis [input file] [file type] [bin length(microns)]
+lin-analyze [input file] [file type] [bin length(microns)]
 ```
 #### Example
 ```shell
-analysis myfile.txt flash4 400
+lin-analyze myfile.txt flash4 400
 ```
 This command line parses myfile.txt that has a file type of flash4 and a bin length of 320 micron
 #### Output
 
 The tool outputs a Counts/Bin and fluence contrast plot 
+<p align="center">
+<img src="examples/Flux1.png" width="500"> 
+</p>
+<p align="center">
+<img src="examples/Fluence.png" width="500"> 
+</p>
 
 # Updating/Uninstalling
 > Write up how to update a current installation (and how to update dependencies as well), how to uninstall it
